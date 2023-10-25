@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Dela Gothic One", sans-serif; 
+    /* font-family: 'Heebo Variable', sans-serif; */
+    /* font-weight: 900; */
+    scroll-behavior: smooth;
+  }
+
+.button{
+    font-family: 'Dela Gothic One', sans-serif
+}
+
+.text{
+    font-family: 'Heebo Variable', sans-serif;
+}
+
+.full-screen{
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+}
+
+.input{
+    border-radius: 0.25rem;
+    border: 1px solid black;
+    padding: 0.375rem 0.75rem;
+}
+
+.error {
+    text-align: center;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border-width: 1px;
+  }
+
+  .rem70{
+    max-width: 20rem;
+  }
