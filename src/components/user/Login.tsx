@@ -33,9 +33,14 @@ export const Login: FC = () => {
     event.preventDefault();
     event.stopPropagation();
 
-    try {
+    /* try {
         await signInWithEmailAndPassword(auth, email, password);
         } catch (error) {
+        setError("⛔️ Invalid email or password"); 
+      } */
+      try {
+        await dispatch({ type: "MAIL_LOGIN", payload: {email, password} });  ///!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      } catch (error) {
         setError("⛔️ Invalid email or password"); 
       }
   }

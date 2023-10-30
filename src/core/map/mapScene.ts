@@ -1,20 +1,27 @@
 import { Container } from "@mui/material";
 import * as OBC from "openbim-components";
 import { env } from "process";
-import { GisParameters } from "../../types";
+import { Building, GisParameters, LngLat } from "../../types";
 import * as dotenv from "dotenv";
 import * as MAPBOX from "mapbox-gl";
 import { MapboxCamera } from "openbim-components/integrations/mapbox/src/mapbox-camera";
 import { MapboxRenderer } from "openbim-components/integrations/mapbox/src/mapbox-renderer";
 import { DirectionalLight } from "three";
 import { MAPBOX_KEY } from "../../secret";
+import { User } from "firebase/auth";
+import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer";
 
 export class MapScene {
   private components = new OBC.Components();
   private readonly style = "mapbox://styles/mapbox/light-v10";
+  private map: MAPBOX.Map;
+  private center: LngLat = { lat: 0, lng: 0 };
+  private clickedCoordinates: LngLat = { lat: 0, lng: 0 };
+  private labels: {[id: string]: CSS2DObject} = {};
 
   constructor(container: HTMLDivElement) {
     const configuration = this.getConfig(container);
+    this.map = this.createMap(configuration);
     this.initializeComponents(configuration);
     this.setupScene();
   }
@@ -22,7 +29,15 @@ export class MapScene {
   dispose() {
     try {
       this.components.dispose();
+      (this.map as any) = null;
       (this.components as any) = null;
+      for(const id in this.labels){
+        const label = this.labels[id];
+        label.removeFromParent();
+        label.element.remove();
+      }
+      this.labels = {};
+
     } catch (error) {
       console.log(error);
     }
@@ -53,10 +68,8 @@ export class MapScene {
   }
 
   private createRenderer(config: GisParameters) {
-    const map = this.createMap(config);
     const coords = this.getCoordinates(config);
-
-    return new MapboxRenderer(this.components, map, coords);
+    return new MapboxRenderer(this.components, this.map, coords);
   }
 
   private getCoordinates(config: GisParameters) {
@@ -65,15 +78,69 @@ export class MapScene {
   }
 
   private createMap(config: GisParameters) {
-    return new MAPBOX.Map({
+    const map = new MAPBOX.Map({
       ...config,
       style: this.style,
       antialias: true,
     });
+
+    map.on('contextmenu', this.storeMousePosition);
+
+    return map;
+
+  }
+
+  private storeMousePosition = (event: MAPBOX.MapMouseEvent) => {
+        this.clickedCoordinates = {...event.lngLat }
+  }
+
+  addBuilding(user: User) {
+    const {lat, lng} = this.clickedCoordinates;
+    const userID = user.uid;
+    const building = {userID, lat, lng, uid: ""};
+    this.addToScene([ building ]);
+  }
+
+  private addToScene( buildings: Building[]){
+    for(const building of buildings){ 
+        const {uid, lng, lat} = building;
+
+      const htmlElement = this.createHtmlElement();
+      const label = new CSS2DObject(htmlElement);
+
+      const center = MAPBOX.MercatorCoordinate.fromLngLat(
+        {...this.center},
+        0
+      );
+
+      const units = center.meterInMercatorCoordinateUnits();
+
+      const model = MAPBOX.MercatorCoordinate.fromLngLat({ lng, lat }, 0);
+
+      model.x /= units;
+      model.y /= units;
+      center.x /= units;
+      center.y /= units;
+
+      label.position.set(model.x - center.x, model.y - center.y, 0);
+      console.log(`${model.x - center.x} , ${model.y - center.y}, 0`);
+      console.log(`Label: ${label}`);
+
+      this.components.scene.get().add(label);
+      this.labels[uid] = label;
+    }
+  }
+
+  private createHtmlElement() {
+    const div = document.createElement("div");
+    div.textContent = "🏛️";
+    div.classList.add("thumbnail");
+    return div;
   }
 
   private getConfig(container: HTMLDivElement) {
     const center = [9.239539615899416, 45.46235831229755] as [number, number];
+    this.center = { lng: center[0], lat: center[1] };
 
     return {
       container,

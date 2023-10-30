@@ -1,3 +1,4 @@
+import { User } from "firebase/auth";
 import { MapScene } from "./mapScene";
 
 export const mapHandler = {
@@ -18,4 +19,10 @@ export const mapHandler = {
       this.map = null;
     }
   },
+
+  addBuilding(user: User) {
+    if(this.map) {
+      this.map.addBuilding(user);
+    }
+  }
 };
