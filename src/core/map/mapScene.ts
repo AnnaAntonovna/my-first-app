@@ -17,7 +17,7 @@ export class MapScene {
   private map: MAPBOX.Map;
   private center: LngLat = { lat: 0, lng: 0 };
   private clickedCoordinates: LngLat = { lat: 0, lng: 0 };
-  private labels: {[id: string]: CSS2DObject} = {};
+  private labels: { [id: string]: CSS2DObject } = {};
 
   constructor(container: HTMLDivElement) {
     const configuration = this.getConfig(container);
@@ -31,13 +31,12 @@ export class MapScene {
       this.components.dispose();
       (this.map as any) = null;
       (this.components as any) = null;
-      for(const id in this.labels){
+      for (const id in this.labels) {
         const label = this.labels[id];
         label.removeFromParent();
         label.element.remove();
       }
       this.labels = {};
-
     } catch (error) {
       console.log(error);
     }
@@ -84,32 +83,31 @@ export class MapScene {
       antialias: true,
     });
 
-    map.on('contextmenu', this.storeMousePosition);
+    map.on("contextmenu", this.storeMousePosition);
 
     return map;
-
   }
 
   private storeMousePosition = (event: MAPBOX.MapMouseEvent) => {
-        this.clickedCoordinates = {...event.lngLat }
-  }
+    this.clickedCoordinates = { ...event.lngLat };
+  };
 
   addBuilding(user: User) {
-    const {lat, lng} = this.clickedCoordinates;
+    const { lat, lng } = this.clickedCoordinates;
     const userID = user.uid;
-    const building = {userID, lat, lng, uid: ""};
-    this.addToScene([ building ]);
+    const building = { userID, lat, lng, uid: "" };
+    this.addToScene([building]);
   }
 
-  private addToScene( buildings: Building[]){
-    for(const building of buildings){ 
-        const {uid, lng, lat} = building;
+  private addToScene(buildings: Building[]) {
+    for (const building of buildings) {
+      const { uid, lng, lat } = building;
 
       const htmlElement = this.createHtmlElement();
       const label = new CSS2DObject(htmlElement);
 
       const center = MAPBOX.MercatorCoordinate.fromLngLat(
-        {...this.center},
+        { ...this.center },
         0
       );
 
@@ -125,9 +123,11 @@ export class MapScene {
       label.position.set(model.x - center.x, model.y - center.y, 0);
       console.log(`${model.x - center.x} , ${model.y - center.y}, 0`);
       console.log(`Label: ${label}`);
+      console.log(label);
 
       this.components.scene.get().add(label);
       this.labels[uid] = label;
+      console.log("Div placed!");
     }
   }
 
@@ -135,6 +135,7 @@ export class MapScene {
     const div = document.createElement("div");
     div.textContent = "🏛️";
     div.classList.add("thumbnail");
+    console.log("Div created!");
     return div;
   }
 

@@ -65,6 +65,7 @@
     border: 5px solid white;
     pointer-events: all;
     transition: background-color 0.2s ease-in-out;
+    z-index: 999;
   }
 
   .thumbnail:hover{
