@@ -120,7 +120,7 @@ export class MapScene {
       center.x /= units;
       center.y /= units;
 
-      label.position.set(model.x - center.x, model.y - center.y, 0);
+      label.position.set(model.x - center.x, 0, model.y - center.y);
       console.log(`${model.x - center.x} , ${model.y - center.y}, 0`);
       console.log(`Label: ${label}`);
       console.log(label);
