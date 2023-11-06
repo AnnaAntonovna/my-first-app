@@ -1,7 +1,6 @@
 import React, { FC } from "react";
 import { getApp } from "firebase/app";
 import { useAppContext } from "../../middleware/ContextProvider";
-import { Button } from "@mui/material";
 import { Navigate } from 'react-router-dom';
 import { Logout } from "./Logout";
 

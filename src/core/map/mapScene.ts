@@ -1,11 +1,6 @@
-import { Container } from "@mui/material";
 import * as OBC from "openbim-components";
-import { env } from "process";
 import { Building, GisParameters, LngLat } from "../../types";
-import * as dotenv from "dotenv";
-import * as MAPBOX from "mapbox-gl";
-import { MapboxCamera } from "openbim-components/integrations/mapbox/src/mapbox-camera";
-import { MapboxRenderer } from "openbim-components/integrations/mapbox/src/mapbox-renderer";
+import * as MAPBOX from 'mapbox-gl';
 import { DirectionalLight } from "three";
 import { MAPBOX_KEY } from "../../secret";
 import { User } from "firebase/auth";
@@ -27,7 +22,8 @@ export class MapScene {
   }
 
   dispose() {
-    try {
+    //try {
+    if (this.components) {
       this.components.dispose();
       (this.map as any) = null;
       (this.components as any) = null;
@@ -37,9 +33,10 @@ export class MapScene {
         label.element.remove();
       }
       this.labels = {};
-    } catch (error) {
-      console.log(error);
     }
+    //} catch (error) {
+    //  console.log(error);
+    //}
   }
 
   private setupScene() {
@@ -56,11 +53,11 @@ export class MapScene {
 
   private initializeComponents(config: GisParameters) {
     this.components.scene = new OBC.SimpleScene(this.components);
-    this.components.camera = new MapboxCamera(this.components);
+    this.components.camera = new OBC.MapboxCamera();
     this.components.renderer = this.createRenderer(config);
-    this.components.raycaster = new OBC.SimpleRaycaster(this.components);
+    //this.components.raycaster = new OBC.SimpleRaycaster(this.components);
     try {
-      this.components.init();
+    this.components.init();
     } catch (error) {
       console.log(error);
     }
@@ -68,7 +65,7 @@ export class MapScene {
 
   private createRenderer(config: GisParameters) {
     const coords = this.getCoordinates(config);
-    return new MapboxRenderer(this.components, this.map, coords);
+    return new OBC.MapboxRenderer(this.components, this.map, coords);
   }
 
   private getCoordinates(config: GisParameters) {
@@ -121,11 +118,29 @@ export class MapScene {
       center.y /= units;
 
       label.position.set(model.x - center.x, 0, model.y - center.y);
-      console.log(`${model.x - center.x} , ${model.y - center.y}, 0`);
-      console.log(`Label: ${label}`);
-      console.log(label);
 
-      this.components.scene.get().add(label);
+      console.log("Center: ", center);
+      console.log("Units: ", units);
+      console.log("Model: ", model);
+      console.log("HTMLElement: ", htmlElement);
+      console.log("Label: ", label);
+      console.log("Label position: ", label.position);
+      console.log("Scene: ", this.components.scene);
+
+      if (this.components && this.components.scene) {
+        try {
+          console.log("Before adding labels");
+          this.components.scene.get().add(label);
+          console.log("After adding labels");
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        console.error(
+          "Components or components.scene are not properly initialized."
+        );
+      }
+
       this.labels[uid] = label;
       console.log("Div placed!");
     }

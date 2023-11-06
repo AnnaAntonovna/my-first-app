@@ -8,7 +8,6 @@ import {
 } from "firebase/auth";
 import { getApp } from "firebase/app";
 import { useAppContext } from "../../middleware/ContextProvider";
-import { Button } from "@mui/material";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   headContainerAnimation,
