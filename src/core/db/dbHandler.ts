@@ -1,8 +1,12 @@
+import { Building } from './../../types';
 import { ActionType } from "../../middleware/Actions";
 import { Action } from "../../middleware/Actions";
 import { GoogleAuthProvider, getAuth, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
+import { deleteDoc, doc, getFirestore, updateDoc } from "firebase/firestore";
+import { Events } from '../../middleware/Events';
+import { getApp } from 'firebase/app';
 
-export const userAuth = {
+export const databaseHandler = {
   login: () => {
     const auth = getAuth();
     const provider = new GoogleAuthProvider();
@@ -24,4 +28,16 @@ export const userAuth = {
       console.error("Sign-in error:", error);
     }
   },
+
+  deleteBuilding: async (building: Building, events: Events) => {
+      const id = building.uid;
+      const dbInstance = getFirestore(getApp());
+      await deleteDoc(doc(dbInstance, "buildings", id));
+      events.trigger({type: "CLOSE_BUILDING"});
+  },
+
+  updateBuilding: async () => {
+    const dbInstance = getFirestore(getApp());
+    await update 
+  }
 };

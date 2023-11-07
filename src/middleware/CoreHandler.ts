@@ -1,20 +1,21 @@
 import { act } from "@testing-library/react";
+import { Events } from "./Events";
 import { mapHandler } from "../core/map/MapHandler";
-import { userAuth } from "../core/user/userAuth";
+import { databaseHandler } from "../core/db/dbHandler";
 import { Action } from "./Actions";
 
-export const executeCore = (action: Action,  email?: string, password?: string) => {
+export const executeCore = (action: Action, events?: Events) => {
     if(action.type === "LOGIN") {
-        userAuth.login();
+        databaseHandler.login();
     }
     if(action.type === 'LOGOUT') {
-        userAuth.logout();
+        databaseHandler.logout();
     }
     if(action.type ==='MAIL_LOGIN')
-    {   email = action.payload.email;
-        password = action.payload.password;
+    {   const email = action.payload.email;
+        const password = action.payload.password;
         if (email && password) {
-            userAuth.loginWithEmailAndPassword(email, password);
+            databaseHandler.loginWithEmailAndPassword(email, password);
           } 
     }
     if(action.type === "START_MAP") {
@@ -26,6 +27,14 @@ export const executeCore = (action: Action,  email?: string, password?: string) 
     }
 
     if(action.type === "ADD_BUILDING") {
+        mapHandler.addBuilding(action.payload);
+    }
+
+    if(action.type === "DELETE_BUILDING") {
+        databaseHandler.deleteBuilding(action.payload, events as Events);
+    }
+
+    if(action.type === "UPDATE_BUILDING") {
         mapHandler.addBuilding(action.payload);
     }
 }

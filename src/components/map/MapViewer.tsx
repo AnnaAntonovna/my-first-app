@@ -50,23 +50,23 @@ export const MapViewer: FC = () => {
       <div className="absolute">
         {isCreating && (
           <div className="overlay">
-            <p>Right click to create a new building or </p>
-            <button className="bg-primary click" onClick={onToggleCreate}>
+            <p className="mr-5">Right click to create a new building or...</p>
+            <button className="click z-2 inline-block rounded border-2 border px-6 pb-[6px] pt-2 text-xs font-medium uppercase leading-normal text-danger transition duration-150 ease-in-out hover:border-danger hover:bg-danger hover:text-white-100 focus:border-danger-600 focus:text-danger-600 focus:outline-none focus:ring-0 active:border-danger-700 active:text-danger-700 dark:hover:bg-neutral-100 dark:hover:bg-opacity-10"
+           onClick={onToggleCreate}>
               cancel
             </button>
           </div>
         )}
         <div className="gis-button-container">
-          <h1>{user.displayName}</h1>
+          {/* <h1>{user.displayName}</h1> */}
           <button
-            className="mb-5 z-2 inline-block rounded border-2 border px-6 pb-[6px] pt-2 text-xs font-medium uppercase leading-normal text-black transition duration-150 ease-in-out hover:border-danger hover:bg-danger hover:text-white-100 focus:border-danger-600 focus:text-danger-600 focus:outline-none focus:ring-0 active:border-danger-700 active:text-danger-700 dark:hover:bg-neutral-100 dark:hover:bg-opacity-10"
+            className="mb-5 z-2 bg-grayOverlay inline-block rounded border-2 border px-6 pb-[6px] pt-2 text-xs font-medium uppercase leading-normal text-black transition duration-150 ease-in-out hover:border-danger hover:bg-danger hover:text-white-100 focus:border-danger-600 focus:text-danger-600 focus:outline-none focus:ring-0 active:border-danger-700 active:text-danger-700 dark:hover:bg-neutral-100 dark:hover:bg-opacity-10"
             onClick={onToggleCreate}
           >
             🏛️ CREATE BULDING
           </button>
           <Logout />
         </div>
-        {/* <h1>MAP!</h1> */}
       </div>
     </>
   );
