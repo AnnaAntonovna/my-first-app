@@ -78,3 +78,26 @@
     margin: 1rem;
     flex-direction: column;
   }
+
+  @keyframes changeOpacity {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  
+  .text-animation {
+    animation: changeOpacity 3s infinite;
+  }
+  .text-animation:active{
+    animation: changeOpacity none;
+  }
+
+  .text-transition {
+    transition: opacity 1s ease-in-out, color 1s ease-in-out;
+  }

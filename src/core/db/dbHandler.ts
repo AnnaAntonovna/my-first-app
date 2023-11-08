@@ -22,22 +22,21 @@ export const databaseHandler = {
     const auth = getAuth();
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      // Sign-in successful, you can redirect or perform other actions here.
     } catch (error) {
-      // Handle sign-in errors (e.g., display an error message).
       console.error("Sign-in error:", error);
     }
   },
 
   deleteBuilding: async (building: Building, events: Events) => {
-      const id = building.uid;
       const dbInstance = getFirestore(getApp());
-      await deleteDoc(doc(dbInstance, "buildings", id));
+      await deleteDoc(doc(dbInstance, "buildings", building.uid));
       events.trigger({type: "CLOSE_BUILDING"});
   },
 
-  updateBuilding: async () => {
+  updateBuilding: async (building: Building) => {
     const dbInstance = getFirestore(getApp());
-    await update 
+    await updateDoc(doc(dbInstance, "buildings", building.uid), {
+      ...building, 
+    }); 
   }
 };

@@ -1,14 +1,23 @@
 import { User } from "firebase/auth";
 import { MapScene } from "./mapScene";
+import { Events } from "../../middleware/Events";
 
 export const mapHandler = {
   started: false,
   map: null as MapScene | null,
 
-  start(container: HTMLDivElement) {
+  /* async start(container: HTMLDivElement, user: User, events: Events) {
     if (!this.map) {
       console.log("Map started");
-      this.map = new MapScene(container);
+      this.map = new MapScene(container, events);
+      await this.map.getAllBuildings(user);
+    }
+  }, */
+  async start(container: HTMLDivElement, user: User, events: Events) {
+    if (!this.map) {
+      console.log("Map started");
+      this.map = new MapScene(container, events);
+      await this.map.getAllBuildings(user);
     }
   },
 
@@ -24,5 +33,6 @@ export const mapHandler = {
     if(this.map) {
       this.map.addBuilding(user);
     }
-  }
+  },
+
 };

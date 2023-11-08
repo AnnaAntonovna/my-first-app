@@ -20,7 +20,7 @@ export const executeCore = (action: Action, events?: Events) => {
     }
     if(action.type === "START_MAP") {
         const { user, container } = action.payload;
-        mapHandler.start(container);
+        mapHandler.start(container, user, events as Events);
     }
     if(action.type === "REMOVE_MAP") {
         mapHandler.remove();
@@ -35,6 +35,6 @@ export const executeCore = (action: Action, events?: Events) => {
     }
 
     if(action.type === "UPDATE_BUILDING") {
-        mapHandler.addBuilding(action.payload);
+        databaseHandler.updateBuilding(action.payload);
     }
 }

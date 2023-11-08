@@ -3,6 +3,7 @@ import { Navigate } from "react-router-dom";
 import { useAppContext } from "../../middleware/ContextProvider";
 import { Logout } from "../user/Logout";
 import { Action } from "../../middleware/Actions";
+import { NormalBlending } from "three";
 
 export const MapViewer: FC = () => {
   const [state, dispatch] = useAppContext();
@@ -10,7 +11,7 @@ export const MapViewer: FC = () => {
   const containerRef = useRef(null);
   const [isCreating, setIsCreating] = useState(false);
 
-  const { user } = state;
+  const { user, building } = state;
 
   const onToggleCreate = () => {
     setIsCreating(!isCreating);
@@ -40,6 +41,11 @@ export const MapViewer: FC = () => {
     return <Navigate to="/" />;
   }
 
+  if (building) {
+    const url = `/building?=${building.uid}`;
+    return <Navigate to={url} />;
+  }
+
   return (
     <>
       <div
@@ -51,22 +57,24 @@ export const MapViewer: FC = () => {
         {isCreating && (
           <div className="overlay">
             <p className="mr-5">Right click to create a new building or...</p>
-            <button className="click z-2 inline-block rounded border-2 border px-6 pb-[6px] pt-2 text-xs font-medium uppercase leading-normal text-danger transition duration-150 ease-in-out hover:border-danger hover:bg-danger hover:text-white-100 focus:border-danger-600 focus:text-danger-600 focus:outline-none focus:ring-0 active:border-danger-700 active:text-danger-700 dark:hover:bg-neutral-100 dark:hover:bg-opacity-10"
-           onClick={onToggleCreate}>
+            <button
+              className="click inline-block rounded border-2 border px-6 pb-[6px] pt-2 text-xs font-medium uppercase leading-normal text-danger transition duration-150 ease-in-out hover:border-danger hover:bg-danger hover:text-white-100 focus:border-danger-600 focus:text-danger-600 focus:outline-none focus:ring-0 active:border-danger-700 active:text-danger-700 dark:hover:bg-neutral-100 dark:hover:bg-opacity-10"
+              onClick={onToggleCreate}
+            >
               cancel
             </button>
           </div>
         )}
-        <div className="gis-button-container">
+        {!isCreating && <div className="gis-button-container">
           {/* <h1>{user.displayName}</h1> */}
           <button
-            className="mb-5 z-2 bg-grayOverlay inline-block rounded border-2 border px-6 pb-[6px] pt-2 text-xs font-medium uppercase leading-normal text-black transition duration-150 ease-in-out hover:border-danger hover:bg-danger hover:text-white-100 focus:border-danger-600 focus:text-danger-600 focus:outline-none focus:ring-0 active:border-danger-700 active:text-danger-700 dark:hover:bg-neutral-100 dark:hover:bg-opacity-10"
+            className="mb-5 bg-grayOverlay inline-block rounded border-2 border px-6 pb-[6px] pt-2 text-xs font-medium uppercase leading-normal text-primary transition duration-150 ease-in-out hover:border-primary hover:bg-primary hover:text-white-100 focus:border-primary-600 focus:text-primary-600 focus:outline-none focus:ring-0 active:border-primary-700 active:text-primary-700 dark:hover:bg-neutral-100 dark:hover:bg-opacity-10"
             onClick={onToggleCreate}
           >
             🏛️ CREATE BULDING
           </button>
           <Logout />
-        </div>
+        </div>}
       </div>
     </>
   );
