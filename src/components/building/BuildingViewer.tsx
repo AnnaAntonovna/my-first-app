@@ -1,7 +1,6 @@
 import React, { FC, useState } from "react";
 import { useAppContext } from "../../middleware/ContextProvider";
 import { Navigate } from "react-router-dom";
-import { Sidebar } from "./Sidebar";
 
 export const BuildingViewer: FC = () => {
   const [sideOpen, setSideOpen] = useState(false);
