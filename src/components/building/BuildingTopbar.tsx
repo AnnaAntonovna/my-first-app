@@ -1,16 +1,25 @@
 import { FC } from "react";
+import { useAppContext } from "../../middleware/ContextProvider";
 
 export const BuildingTopbar: FC<{
   sideOpen: boolean;
   onOpen: () => void;
-  width: number;
 }> = (props) => {
   const { sideOpen: leftSideOpen, onOpen } = props;
+
+  const [state, dispatch] = useAppContext();
+  const onCloseBuilding = () => {
+    dispatch({ type: "CLOSE_BUILDING" });
+  };
+
   return (
     <>
       <div className="p-5 text-white bg-primary-100 flex justify-between items-center w-100">
         <div className="flex">
-          <button className="flex px-6 pb-[6px] pt-2 text-xs text-primary rounded-md bg-white text-primary transition duration-150 ease-in-out">
+          <button 
+            onClick={onOpen}
+            onDoubleClick={() => {console.log("Close/open")}}
+          className="flex px-6 pb-[6px] pt-2 text-xs text-primary rounded-md bg-white text-primary transition duration-150 ease-in-out">
             {!leftSideOpen && (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -45,7 +54,7 @@ export const BuildingTopbar: FC<{
             )}
           </button>
           <button
-            onClick={onOpen}
+            onClick={onCloseBuilding}
             className="ml-6 flex click border-white inline-block rounded border-2 border px-6 pb-[6px] pt-2 text-xs font-medium uppercase leading-normal text-primary transition duration-150 ease-in-out hover:border-primary hover:bg-primary hover:text-white-100 focus:border-primary-600 focus:text-primary-600 focus:outline-none focus:ring-0 active:border-primary-700 active:text-primary-700 dark:hover:bg-neutral-100 dark:hover:bg-opacity-10"
           >
             <svg
@@ -78,7 +87,7 @@ export const BuildingTopbar: FC<{
             </svg>
             Back to the map
           </button>
-          <div className="ml-10 text-xl pt-1">BUILDING NAME</div>
+          <div className="ml-10 text-xl pt-1"></div>
         </div>
         <button className="flex px-6 pb-[6px] pt-2 text-primary rounded-md bg-white text-primary transition duration-150 ease-in-out hover:border-primary hover:bg-primary hover:text-white focus:border-primary-700 focus:bg-primary focus:text-white">
           <svg
