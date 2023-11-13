@@ -1,30 +1,17 @@
-import React, { FC, useState } from "react";
-import { useAppContext } from "../../middleware/ContextProvider";
-import { Navigate } from "react-router-dom";
-import { BuildingTopbar } from "./BuildingTopbar"; 
+import { FC } from "react";
 
-export const BuildingViewer: FC = () => {
-  const [sideOpen, setSideOpen] = useState(false);
-  const [frontOpen, setFrontOpen] = useState(false);
-  const [width] = useState(240);
-
-  const [state, dispatch] = useAppContext();
-  const { user, building } = state;
-
-  const onCloseBuilding = () => {
-    dispatch({ type: "CLOSE_BUILDING" });
-  };
-
-  if (!building) {
-    return <Navigate to={"/map"} />;
-  }
-
+export const BuildingTopbar: FC<{
+  sideOpen: boolean;
+  onOpen: () => void;
+  width: number;
+}> = (props) => {
+  const { sideOpen: leftSideOpen, onOpen } = props;
   return (
     <>
       <div className="p-5 text-white bg-primary-100 flex justify-between items-center w-100">
         <div className="flex">
           <button className="flex px-6 pb-[6px] pt-2 text-xs text-primary rounded-md bg-white text-primary transition duration-150 ease-in-out">
-            {!sideOpen && (
+            {!leftSideOpen && (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -40,7 +27,7 @@ export const BuildingViewer: FC = () => {
                 />
               </svg>
             )}
-            {sideOpen && (
+            {leftSideOpen && (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -58,7 +45,7 @@ export const BuildingViewer: FC = () => {
             )}
           </button>
           <button
-            onClick={onCloseBuilding}
+            onClick={onOpen}
             className="ml-6 flex click border-white inline-block rounded border-2 border px-6 pb-[6px] pt-2 text-xs font-medium uppercase leading-normal text-primary transition duration-150 ease-in-out hover:border-primary hover:bg-primary hover:text-white-100 focus:border-primary-600 focus:text-primary-600 focus:outline-none focus:ring-0 active:border-primary-700 active:text-primary-700 dark:hover:bg-neutral-100 dark:hover:bg-opacity-10"
           >
             <svg
