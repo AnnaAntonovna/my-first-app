@@ -68,7 +68,7 @@ export const MapViewer: FC = () => {
         {!isCreating && <div className="gis-button-container">
           {/* <h1>{user.displayName}</h1> */}
           <button
-            className="mb-5 bg-grayOverlay inline-block rounded border-2 border px-6 pb-[6px] pt-2 text-xs font-medium uppercase leading-normal text-primary transition duration-150 ease-in-out hover:border-primary hover:bg-primary hover:text-white-100 focus:border-primary-600 focus:text-primary-600 focus:outline-none focus:ring-0 active:border-primary-700 active:text-primary-700 dark:hover:bg-neutral-100 dark:hover:bg-opacity-10"
+            className="mb-5 bg-white inline-block rounded border-2  border-white border px-6 pb-[6px] pt-2 text-xs font-medium uppercase leading-normal text-primary transition duration-150 ease-in-out hover:border-primary hover:bg-primary hover:text-white-100 focus:border-primary-600 focus:text-primary-600 focus:outline-none focus:ring-0 active:border-primary-700 active:text-primary-700 dark:hover:bg-neutral-100 dark:hover:bg-opacity-10"
             onClick={onToggleCreate}
           >
             🏛️ CREATE BULDING

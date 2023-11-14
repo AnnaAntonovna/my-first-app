@@ -1,17 +1,17 @@
-import { getSidebarTools } from "./SidebarTools";
+import { getPropertiesTools } from "./PropertiesTools";
 import { useAppContext } from "../../../middleware/ContextProvider";
 import React, { FC } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { slideAnimation } from "../../../config/motion";
 
-export const BuildingSidebar: FC<{
+export const BuildingProperties: FC<{
   open: boolean;
   onToggleMenu: () => void;
 }> = (props) => {
   const { open, onToggleMenu } = props;
   const [state, dispatch] = useAppContext();
 
-  const tools = getSidebarTools(state, dispatch, onToggleMenu);
+  const tools = getPropertiesTools(state, dispatch, onToggleMenu);
 
   return (
     <>
@@ -25,6 +25,6 @@ export const BuildingSidebar: FC<{
               {tool.name}
             </button>
           ))}
-          </>
+    </>
   );
 };

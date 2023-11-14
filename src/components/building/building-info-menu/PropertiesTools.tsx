@@ -3,7 +3,7 @@ import { State } from "../../../middleware/State";
 import { Tool } from "../../../types";
 import ListIcon from "@mui/icons-material/ViewList";
 
-export function getSidebarTools(
+export function getPropertiesTools(
   state: State,
   dispatch: React.Dispatch<Action>,
   toggleMenu: () => void

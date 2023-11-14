@@ -57,6 +57,7 @@ module.exports = {
         "black-100": "#100d25",
         "black-200": "#090325",
         "white-100": "#f3f3f3",
+        "gray-100": "#5E5E5E",
       },
 
       backgroundColor: {
@@ -72,6 +73,7 @@ module.exports = {
         300: "300px",
         340: "340px",
         350: "350px",
+        360: "360px",
         656: "656px",
         880: "880px",
         508: "508px",
