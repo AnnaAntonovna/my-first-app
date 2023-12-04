@@ -59,12 +59,16 @@ export const Login: FC = () => {
                 <img src={logo} className="mb-5 h-1/4 w-1/3 min-w-fit mt-5" />
                 <form onSubmit={onMailLogin}>
                   {error && <p className="mb-6 field error pb-2.5 rounded pt-3 text-sm">{error}</p>}
-                  <p>Login</p>
+                  <p 
+                    className="mb-3"
+                  >LOGIN</p>
                   <input type="email" className="mb-6 w-full pb-2.5 rounded input"
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
                   ></input>
-                  <p>Password</p>
+                  <p
+                    className="mb-3"
+                  >PASSWORD</p>
                   <input type="password" className="mb-6 w-full pb-2.5 rounded input"
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
@@ -72,7 +76,7 @@ export const Login: FC = () => {
 
                   <button
                     type="submit"
-                    className="inline-block w-full rounded bg-primary px-7 pb-2.5 pt-3 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+                    className="click inline-block w-full rounded bg-primary px-7 pb-2.5 pt-3 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
                   >
                     Sign in
                   </button>
@@ -144,9 +148,16 @@ export const Login: FC = () => {
           autoPlay
           className="w-full h-full object-cover"
         />
-        <div className="z-1 absolute w-full h-gull top-0 right-0 left-0 bottom-0 bg-blackOverlay" />
+        <div className="z-1 absolute w-full h-gull top-0 right-0 left-0 bottom-0 bg-blackOverlay click" />
       </div>
       )}
+      <motion.div
+            animate= {{opacity: 0}}
+            transition={{ delay: 0.6 }}
+            className="bg-white-100 absolute w-screen h-screen flex justify-center items-center pointer-events-none"
+          >
+            Loading...
+      </motion.div>
       {state.user && <Navigate to='/'/>}
     </div>
   );

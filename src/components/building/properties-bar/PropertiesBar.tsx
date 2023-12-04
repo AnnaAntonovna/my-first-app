@@ -2,7 +2,7 @@ import {FC} from 'react';
 import { useAppContext } from '../../../middleware/ContextProvider';
 import { error } from 'console';
 
-export const BuildingInfoMenu: FC<{
+export const PropertiesBar: FC<{
     onToggleMenu: (active: boolean) => void
 }> = ({onToggleMenu}) => {
     const [state, dispatch] = useAppContext();

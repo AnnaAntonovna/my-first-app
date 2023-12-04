@@ -3,10 +3,11 @@ import { useAppContext } from "../../../middleware/ContextProvider";
 import React, { FC } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { slideAnimation } from "../../../config/motion";
+import { FrontMenuMode } from "../front-menu/BuildingMenu";
 
 export const BuildingSidebar: FC<{
   open: boolean;
-  onToggleMenu: () => void;
+  onToggleMenu: (active?: boolean, mode?: FrontMenuMode) => void;
 }> = (props) => {
   const { open, onToggleMenu } = props;
   const [state, dispatch] = useAppContext();
@@ -17,7 +18,7 @@ export const BuildingSidebar: FC<{
     <>
           {tools.map((tool) => (
             <button
-              onClick={tool.action}
+              onClick={() => tool.action({onToggleMenu, state, dispatch})}
               key={tool.name}
               className="flex items-center justify-center p-5 text-red text-gray-100 hover:text-black transition duration-150 ease-in-out"
             >
