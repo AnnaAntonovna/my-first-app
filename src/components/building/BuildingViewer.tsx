@@ -47,6 +47,8 @@ export const BuildingViewer: FC = () => {
     console.log("onToggleMenuInfo");
     if(mode) {
       setFrontMenu(mode);
+      console.log("onToggleFrontMenu");
+      console.log(mode);
     }
     setFrontOpen(active);
   };
@@ -76,7 +78,7 @@ export const BuildingViewer: FC = () => {
                 <div className="flex-grow flex flex-col min-w-210 xscreen:w-full mscreen:w-360 p-5 border-r-4 border-primary-100">
                   <BuildingSidebar
                     open={true}
-                    onToggleMenu={onToggleMenuSidebar}
+                    onToggleMenu={toggleFrontMenu}
                   />
                 </div>
               </motion.section>
@@ -94,14 +96,14 @@ export const BuildingViewer: FC = () => {
                   <div className="flex-grow flex flex-col min-w-210 xscreen:w-full mscreen:w-360 p-5 ">
                     <BuildingSidebar
                       open={true}
-                      onToggleMenu={onToggleMenuSidebar}
+                      onToggleMenu={toggleFrontMenu}
                     />
                   </div>
                 </motion.section>
               </motion.section>
             )}
 
-            <div className="bg-primary flex-grow w-screen">
+            <div className="flex-grow w-screen">
               <BuildingMenu onToggleMenu={toggleFrontMenu} open={frontOpen} mode={frontMenu}/>
             </div>
 

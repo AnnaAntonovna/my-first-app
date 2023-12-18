@@ -148,7 +148,7 @@ export const Login: FC = () => {
           autoPlay
           className="w-full h-full object-cover"
         />
-        <div className="z-1 absolute w-full h-gull top-0 right-0 left-0 bottom-0 bg-blackOverlay click" />
+        <div className="z-1 absolute w-full h-full top-0 right-0 left-0 bottom-0 bg-blackOverlay click" />
       </div>
       )}
       <motion.div
