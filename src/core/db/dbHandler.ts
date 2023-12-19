@@ -1,10 +1,11 @@
-import { Building } from './../../types';
+import { Events } from './../../middleware/Events';
+import { Building, Model } from './../../types';
 import { ActionType } from "../../middleware/Actions";
 import { Action } from "../../middleware/Actions";
 import { GoogleAuthProvider, getAuth, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
 import { deleteDoc, doc, getFirestore, updateDoc } from "firebase/firestore";
-import { Events } from '../../middleware/Events';
 import { getApp } from 'firebase/app';
+import {deleteObject, getStorage, ref, uploadBytes} from "firebase/storage"
 
 export const databaseHandler = {
   login: () => {
@@ -40,5 +41,22 @@ export const databaseHandler = {
     await updateDoc(doc(dbInstance, "buildings", building.uid), {
       ...building, 
     }); 
+  },
+  uploadmodel : async(model: Model, file: File, building: Building, events: Events) => {
+    const appInstance = getApp();
+    const storageInstance = getStorage(appInstance);
+    
+    const fileRef = ref(storageInstance, model.id);
+    await uploadBytes(fileRef, file);
+
+    events.trigger({type: "UPDATE_BUILDING", payload: building});
+  },
+
+  deleteModel:async (model: Model, building: Building, events: Events) => {
+    const appInstance = getApp();
+    const storageInstance = getStorage(appInstance);
+    const fileRef = ref(storageInstance, model.id);
+    await deleteObject(fileRef);
+    events.trigger({type: "UPDATE_BUILDING", payload: building});
   }
 };

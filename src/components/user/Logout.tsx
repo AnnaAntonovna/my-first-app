@@ -30,7 +30,7 @@ export const Logout: FC = () => {
           </button>
         </>
       ) : (
-        <Navigate to="/my-login" />
+        <Navigate to="/" />
       )}
 
       {/* <button onClick={onLogoutClick}

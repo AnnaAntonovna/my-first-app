@@ -13,7 +13,8 @@ export interface Building {
     userID: string;
     lat: number;
     lng: number;
-    name: string
+    name: string;
+    models: Model[];
 }
 
 export interface LngLat {
@@ -25,4 +26,9 @@ export interface Tool {
     name: string;
     icon: any;
     action: (...args: any) => void;
+}
+
+export interface Model {
+    name: string;
+    id: string;
 }

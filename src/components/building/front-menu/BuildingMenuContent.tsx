@@ -1,14 +1,19 @@
 import { FC } from "react";
 import { useAppContext } from "../../../middleware/ContextProvider";
-import { FrontMenuMode } from "./BuildingMenu";
-import { Form } from "react-router-dom";
+import { FrontMenuMode } from "../types";
+import { Form, Navigate } from "react-router-dom";
 
 export const BuildingInfoMenu: FC<{
   onToggleMenu: (active: boolean) => void;
 }> = ({ onToggleMenu }) => {
   const [state, dispatch] = useAppContext();
 
-  const { building } = state;
+  const { building, user } = state;
+
+  if (!user) {
+    return <Navigate to="/"/>
+  } 
+
   console.log("We're inside BuildingInfoMenu");
 
   if (!building) {
@@ -29,7 +34,7 @@ export const BuildingInfoMenu: FC<{
 
   console.log("Context");
   return (
-    <form className="bg-secondary-100" onSubmit={onUpdateBuilding}>
+    <form className="bg-secondary-100 p-1" onSubmit={onUpdateBuilding}>
       This is the building info
       <div className="">
         <div className="flex items-center justify-between mt-5 text-xs">
@@ -80,7 +85,7 @@ export const BuildingInfoMenu: FC<{
             defaultValue={building.lat}
           ></input>
         </div>
-        <div className="flex pt-8 pb-3 items-center justify-center">
+        <div className="flex pt-8 pb-2 items-center justify-center">
           <button className="
           flex inline-block rounded border-2 border px-6 pb-[6px] pt-2 text-xs
             font-medium uppercase leading-normal text-primary border-white

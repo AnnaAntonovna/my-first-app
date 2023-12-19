@@ -10,7 +10,9 @@ export const ActionList =
   "OPEN_BUILDING",
   "CLOSE_BUILDING",
   "UPDATE_BUILDING",
-  "DELETE_BUILDING"
+  "DELETE_BUILDING",
+  "UPLOAD_MODEL",
+  "DELETE_MODEL",
 ] as const;
 
 type ActionListType = typeof ActionList;

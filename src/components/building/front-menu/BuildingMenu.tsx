@@ -1,12 +1,12 @@
 import { FC } from "react";
 import { BuildingInfoMenu } from "./BuildingMenuContent";
-
-export type FrontMenuMode = "BuildingInfo";
+import { FrontMenuMode } from '../types';
+import { ModelListMenu } from "./ModelListMenu";
 
 export const BuildingMenu: FC<{
   mode: FrontMenuMode;
   open: boolean;
-  onToggleMenu: (active: boolean) => void;
+  onToggleMenu: (active: boolean, mode?: FrontMenuMode) => void;
 }> = ({ mode, open, onToggleMenu }) => {
   if (!open) {
     console.log("Empty div - not open");
@@ -18,9 +18,11 @@ export const BuildingMenu: FC<{
   console.log("We are inside of the building menu");
 
   content.set("BuildingInfo", <BuildingInfoMenu onToggleMenu={onToggleMenu} />);
+  content.set("ModelList", <ModelListMenu />);
 
   const titles = {
     BuildingInfo: "Building Information",
+    ModelList: "Model List",
   };
 
   const title = titles[mode];

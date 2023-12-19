@@ -6,7 +6,8 @@ import { BuildingSidebar } from "./sidebar/BuildingSidebar";
 import { motion, AnimatePresence } from "framer-motion";
 import { slideAnimation, fadeAnimationFast } from "../../config/motion";
 import { BuildingProperties } from "./properties-bar/BuildingProperties";
-import { BuildingMenu, FrontMenuMode } from "./front-menu/BuildingMenu";
+import { BuildingMenu } from "./front-menu/BuildingMenu";
+import { FrontMenuMode } from '../building/types';
 
 export const BuildingViewer: FC = () => {
   const [sideOpen, setSideOpen] = useState(false);
@@ -37,7 +38,7 @@ export const BuildingViewer: FC = () => {
     return <Navigate to={"/map"} />;
   }
   if (!user) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/" />;
   }
 
   const onToggleMenuSidebar = () => {

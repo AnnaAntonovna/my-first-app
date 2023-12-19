@@ -3,7 +3,7 @@ import { useAppContext } from "../../../middleware/ContextProvider";
 import React, { FC } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { slideAnimation } from "../../../config/motion";
-import { FrontMenuMode } from "../front-menu/BuildingMenu";
+import { FrontMenuMode } from "../types";
 
 export const BuildingSidebar: FC<{
   open: boolean;
