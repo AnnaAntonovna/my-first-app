@@ -52,7 +52,7 @@ export const databaseHandler = {
     events.trigger({type: "UPDATE_BUILDING", payload: building});
   },
 
-  deleteModel:async (model: Model, building: Building, events: Events) => {
+  deleteModel:async (model: Model, building: Building,  events: Events) => {
     const appInstance = getApp();
     const storageInstance = getStorage(appInstance);
     const fileRef = ref(storageInstance, model.id);

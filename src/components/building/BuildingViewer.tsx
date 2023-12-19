@@ -1,13 +1,14 @@
 import React, { FC, useState } from "react";
 import { useAppContext } from "../../middleware/ContextProvider";
 import { Navigate } from "react-router-dom";
-import { BuildingTopbar } from "./BuildingTopbar";
-import { BuildingSidebar } from "./sidebar/BuildingSidebar";
+import { BuildingTopbar } from "./side-menu/BuildingTopbar";
+import { BuildingSidebar } from "./side-menu/BuildingSidebar";
 import { motion, AnimatePresence } from "framer-motion";
 import { slideAnimation, fadeAnimationFast } from "../../config/motion";
 import { BuildingProperties } from "./properties-bar/BuildingProperties";
 import { BuildingMenu } from "./front-menu/BuildingMenu";
-import { FrontMenuMode } from '../building/types';
+import { FrontMenuMode } from "./types";
+import { BuildingViewport } from "./viewport/buildingViewport";
 
 export const BuildingViewer: FC = () => {
   const [sideOpen, setSideOpen] = useState(false);
@@ -46,7 +47,7 @@ export const BuildingViewer: FC = () => {
   };
   const toggleFrontMenu = (active = !frontOpen, mode?: FrontMenuMode) => {
     console.log("onToggleMenuInfo");
-    if(mode) {
+    if (mode) {
       setFrontMenu(mode);
       console.log("onToggleFrontMenu");
       console.log(mode);
@@ -60,9 +61,12 @@ export const BuildingViewer: FC = () => {
 
   return (
     <>
-      <div className="md:flex h-screen flex-col overflow-hidden">
+      <div className="md:flex h-screen flex-col overflow-hidden relative">
+      <div className="w-screen h-screen fixed top-0 left-0 right-0">
+        <BuildingViewport />
+      </div>
         <AnimatePresence>
-          <motion.section {...slideAnimation("up")}>
+          <motion.section className="z-20" {...slideAnimation("up")}>
             <BuildingTopbar
               sideOpen={sideOpen}
               onOpen={() => onSideOpen()}
@@ -74,16 +78,14 @@ export const BuildingViewer: FC = () => {
             {sideOpen && (
               <motion.section
                 {...slideAnimation("left")}
-                className="flex-grow flex flex-col"
+                className="flex-grow flex flex-col z-20 w-190 xscreen:w-full mscreen:w-190"
               >
-                <div className="flex-grow flex flex-col min-w-210 xscreen:w-full mscreen:w-360 p-5 border-r-4 border-primary-100">
-                  <BuildingSidebar
-                    open={true}
-                    onToggleMenu={toggleFrontMenu}
-                  />
+                <div className="flex-grow flex flex-col p-5 border-r-4 border-primary-100">
+                  <BuildingSidebar open={true} onToggleMenu={toggleFrontMenu} />
                 </div>
               </motion.section>
             )}
+            
             {!sideOpen && leftActivated && (
               <motion.section
                 animate={{ x: -200, opacity: 0 }}
@@ -91,10 +93,11 @@ export const BuildingViewer: FC = () => {
                 className="flex-grow flex flex-col border-r-4 border-primary-100"
               >
                 <motion.section
+                className="z-20"
                   animate={{ opacity: 0, contentVisibility: "hidden" }}
                   transition={{ delay: 0.4 }}
                 >
-                  <div className="flex-grow flex flex-col min-w-210 xscreen:w-full mscreen:w-360 p-5 ">
+                  <div className="flex-grow flex flex-col min-w-210 xscreen:w-full mscreen:w-360 p-5">
                     <BuildingSidebar
                       open={true}
                       onToggleMenu={toggleFrontMenu}
@@ -104,8 +107,12 @@ export const BuildingViewer: FC = () => {
               </motion.section>
             )}
 
-            <div className="flex-grow w-screen">
-              <BuildingMenu onToggleMenu={toggleFrontMenu} open={frontOpen} mode={frontMenu}/>
+            <div className="flex-grow">
+              <BuildingMenu
+                onToggleMenu={toggleFrontMenu}
+                open={frontOpen}
+                mode={frontMenu}
+              />
             </div>
 
             {rightOpen && (
@@ -132,7 +139,7 @@ export const BuildingViewer: FC = () => {
                   animate={{ opacity: 0, contentVisibility: "hidden" }}
                   transition={{ delay: 0.3 }}
                 >
-                  <div className="ml-auto flex-grow flex flex-col min-w-210 xscreen:w-full mscreen:w-360 p-5 border-l-4 border-primary-100">
+                  <div className="ml-auto flex-grow flex flex-col min-w-210 xscreen:w-full mscreen:w-360 p-5 border-l-4 border-primary-100 z-20">
                     <BuildingProperties
                       open={true}
                       onToggleMenu={onToggleProperties}
