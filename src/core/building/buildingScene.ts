@@ -1,11 +1,15 @@
 import * as OBC from "openbim-components";
+import * as THREE from "three";
 
 export class BuildingScene {
   components: OBC.Components;
   constructor(container: HTMLDivElement) {
     this.components = new OBC.Components();
 
-    this.components.scene = new OBC.SimpleScene(this.components);
+    const scene = new OBC.SimpleScene(this.components);
+    scene.get().background = null;
+
+    this.components.scene = scene;
     this.components.renderer = new OBC.SimpleRenderer(
       this.components,
       container
@@ -16,6 +20,7 @@ export class BuildingScene {
 
   
     const grid = new OBC.SimpleGrid(this.components);
+    
     this.components.tools.add(grid);
   }
 

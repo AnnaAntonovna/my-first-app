@@ -78,9 +78,9 @@ export const BuildingViewer: FC = () => {
             {sideOpen && (
               <motion.section
                 {...slideAnimation("left")}
-                className="flex-grow flex flex-col z-20 w-190 xscreen:w-full mscreen:w-190"
+                className="flex flex-col z-20 min-w-210 xscreen:w-full mscreen:w-360"
               >
-                <div className="flex-grow flex flex-col p-5 border-r-4 border-primary-100">
+                <div className="flex-grow flex flex-col p-5 border-r-4 border-primary-100 min-w-210 xscreen:w-full mscreen:w-360">
                   <BuildingSidebar open={true} onToggleMenu={toggleFrontMenu} />
                 </div>
               </motion.section>
@@ -90,14 +90,14 @@ export const BuildingViewer: FC = () => {
               <motion.section
                 animate={{ x: -200, opacity: 0 }}
                 transition={{ delay: 0 }}
-                className="flex-grow flex flex-col border-r-4 border-primary-100"
+                className="flex flex-col p-5 border-r-4 border-primary-100 min-w-210 xscreen:w-full mscreen:w-360"
               >
                 <motion.section
                 className="z-20"
                   animate={{ opacity: 0, contentVisibility: "hidden" }}
                   transition={{ delay: 0.4 }}
                 >
-                  <div className="flex-grow flex flex-col min-w-210 xscreen:w-full mscreen:w-360 p-5">
+                  <div className="flex-grow flex flex-col min-w-210 xscreen:w-full mscreen:w-360">
                     <BuildingSidebar
                       open={true}
                       onToggleMenu={toggleFrontMenu}
@@ -107,7 +107,7 @@ export const BuildingViewer: FC = () => {
               </motion.section>
             )}
 
-            <div className="flex-grow">
+            <div className="z-20 h-auto">
               <BuildingMenu
                 onToggleMenu={toggleFrontMenu}
                 open={frontOpen}
@@ -118,7 +118,7 @@ export const BuildingViewer: FC = () => {
             {rightOpen && (
               <motion.section
                 {...slideAnimation("right")}
-                className="flex-grow flex flex-col ml-auto"
+                className="flex flex-col ml-auto z-20 min-w-210 xscreen:w-full mscreen:w-360"
               >
                 <div className="ml-auto flex-grow flex flex-col min-w-210 xscreen:w-full mscreen:w-360 p-5 border-l-4 border-primary-100">
                   <BuildingProperties
@@ -133,13 +133,13 @@ export const BuildingViewer: FC = () => {
                 animate={{ x: 250, opacity: 0 }}
                 exit={{ opacity: 0 }}
                 transition={{ delay: 0 }}
-                className="flex-grow flex flex-col ml-auto"
+                className="flex-col ml-auto"
               >
                 <motion.section
                   animate={{ opacity: 0, contentVisibility: "hidden" }}
                   transition={{ delay: 0.3 }}
                 >
-                  <div className="ml-auto flex-grow flex flex-col min-w-210 xscreen:w-full mscreen:w-360 p-5 border-l-4 border-primary-100 z-20">
+                  <div className="ml-auto flex-grow flex flex-col min-w-210 xscreen:w-full mscreen:w-360 z-20 p-5">
                     <BuildingProperties
                       open={true}
                       onToggleMenu={onToggleProperties}
@@ -154,7 +154,7 @@ export const BuildingViewer: FC = () => {
             animate={{ opacity: 1 }}
             initial={{ opacity: 0 }}
             transition={{ delay: 0.5 }}
-            className="bg-primary-100 text-xs text-end p-1 text-primary"
+            className="bg-primary-100 text-xs text-end p-1 text-primary z-30"
           >
             Strategie Digitali srl {building.uid}
           </motion.div>

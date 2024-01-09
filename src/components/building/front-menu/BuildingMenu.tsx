@@ -30,7 +30,7 @@ export const BuildingMenu: FC<{
   return (
     <div className="bg-white border-r-4 border-b-4 border-solid border-primary-100 text-primary p-2 z-100 min-w-210 xscreen:w-full mscreen:w-360">
       <div
-      className="flex items-center justify-between pt-6 pb-6"
+      className="flex items-center justify-between pt-6 pb-6 "
       >
         <h2>{title}</h2>
         <button onClick={() => onToggleMenu(false)}>

@@ -1,4 +1,4 @@
-import { BuildingScene } from "./beuildingScene";
+import { BuildingScene } from "./buildingScene";
 
 export const buildingHandler = {
     viewer: null as BuildingScene | null,
