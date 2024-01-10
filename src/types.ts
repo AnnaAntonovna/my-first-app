@@ -22,9 +22,15 @@ export interface LngLat {
     lat: number;
 }
 
+export interface Floorplan {
+    name: string;
+    id: string;
+  }
+
 export interface Tool {
     name: string;
     icon: any;
+    active?: boolean,
     action: (...args: any) => void;
 }
 
@@ -32,3 +38,13 @@ export interface Model {
     name: string;
     id: string;
 }
+
+export interface Floorplan {
+    name: string;
+    id: string;
+  }
+  
+  export interface Property {
+    name: string;
+    value: string;
+  }

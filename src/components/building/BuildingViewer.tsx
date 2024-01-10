@@ -9,6 +9,7 @@ import { BuildingProperties } from "./properties-bar/BuildingProperties";
 import { BuildingMenu } from "./front-menu/BuildingMenu";
 import { FrontMenuMode } from "./types";
 import { BuildingViewport } from "./viewport/buildingViewport";
+import { BuildingBottomMenu } from "./bottom-menu/BuildingBottomMenu";
 
 export const BuildingViewer: FC = () => {
   const [sideOpen, setSideOpen] = useState(false);
@@ -62,9 +63,9 @@ export const BuildingViewer: FC = () => {
   return (
     <>
       <div className="md:flex h-screen flex-col overflow-hidden relative">
-      <div className="w-screen h-screen fixed top-0 left-0 right-0">
-        <BuildingViewport />
-      </div>
+        <div className="w-screen h-screen fixed top-0 left-0 right-0">
+          <BuildingViewport />
+        </div>
         <AnimatePresence>
           <motion.section className="z-20" {...slideAnimation("up")}>
             <BuildingTopbar
@@ -85,7 +86,7 @@ export const BuildingViewer: FC = () => {
                 </div>
               </motion.section>
             )}
-            
+
             {!sideOpen && leftActivated && (
               <motion.section
                 animate={{ x: -200, opacity: 0 }}
@@ -93,7 +94,7 @@ export const BuildingViewer: FC = () => {
                 className="flex flex-col p-5 border-r-4 border-primary-100 min-w-210 xscreen:w-full mscreen:w-360"
               >
                 <motion.section
-                className="z-20"
+                  className="z-20"
                   animate={{ opacity: 0, contentVisibility: "hidden" }}
                   transition={{ delay: 0.4 }}
                 >
@@ -149,6 +150,9 @@ export const BuildingViewer: FC = () => {
               </motion.section>
             )}
           </div>
+          <div className="z-30">
+            <BuildingBottomMenu />
+            </div>
 
           <motion.div
             animate={{ opacity: 1 }}
@@ -156,8 +160,9 @@ export const BuildingViewer: FC = () => {
             transition={{ delay: 0.5 }}
             className="bg-primary-100 text-xs text-end p-1 text-primary z-30"
           >
-            Strategie Digitali srl {building.uid}
+            Strategie Digitali srl
           </motion.div>
+        
         </AnimatePresence>
       </div>
     </>

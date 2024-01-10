@@ -6,7 +6,7 @@ import { databaseHandler } from "../core/db/dbHandler";
 import { Action } from "./Actions";
 import { buildingHandler } from '../core/building/buildingHandler';
 
-export const executeCore = (action: Action, events?: Events) => {
+export const executeCore = async (action: Action, events?: Events) => {
     if(action.type === "LOGIN") {
         return databaseHandler.login();
     }
@@ -46,16 +46,32 @@ export const executeCore = (action: Action, events?: Events) => {
     }
 
     if(action.type === "UPLOAD_MODEL") {
-        const {model, file, building} = action.payload;
-        return databaseHandler.uploadmodel(model, file, building, events as Events);
+        const { model, file, building } = action.payload;
+        console.log("The file", file)
+        const zipFile = await buildingHandler.convertIfcToFragments(file);
+        console.log("Should be zip!", zipFile)
+        return databaseHandler.uploadModel(model, zipFile, building, events as Events);
     }
     if(action.type === "START_BUILDING") {
-        console.log("Start building!");
-        return buildingHandler.start(action.payload);
+        const {container, building, events} = action.payload;
+        return buildingHandler.start(container, building, events);
     }
     if(action.type === "CLOSE_BUILDING") {
         return buildingHandler.remove();
     }
-
+    
+    if (action.type === "EXPLODE_MODEL") {
+        return buildingHandler.explode(action.payload);
+      }
+      if (action.type === "TOGGLE_CLIPPER") {
+        return buildingHandler.toggleClippingPlanes(action.payload);
+      }
+      if (action.type === "TOGGLE_DIMENSIONS") {
+        return buildingHandler.toggleDimensions(action.payload);
+      }
+      if (action.type === "TOGGLE_FLOORPLAN") {
+        const { active, floorplan } = action.payload;
+        return buildingHandler.toggleFloorplan(active, floorplan);
+      }
   
 }

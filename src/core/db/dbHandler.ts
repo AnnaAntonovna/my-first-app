@@ -6,6 +6,7 @@ import { GoogleAuthProvider, getAuth, signInWithEmailAndPassword, signInWithPopu
 import { deleteDoc, doc, getFirestore, updateDoc } from "firebase/firestore";
 import { getApp } from 'firebase/app';
 import {deleteObject, getStorage, ref, uploadBytes} from "firebase/storage"
+import { buildingHandler } from '../building/buildingHandler';
 
 export const databaseHandler = {
   login: () => {
@@ -33,6 +34,14 @@ export const databaseHandler = {
     console.log(id);
     const dbInstance = getFirestore(getApp());
     await deleteDoc(doc(dbInstance, "buildings", id));
+    const storageInstance = getStorage(getApp());
+    const ids: string[] = [];
+    for(const model of building.models){
+      const fileRef = ref(storageInstance, model.id);
+      await deleteObject(fileRef);
+      ids.push(model.id)
+    }
+    await buildingHandler.deleteModels(ids);
     events.trigger({ type: "CLOSE_BUILDING" });
   },
 
@@ -42,14 +51,18 @@ export const databaseHandler = {
       ...building, 
     }); 
   },
-  uploadmodel : async(model: Model, file: File, building: Building, events: Events) => {
+  uploadModel: async (
+    model: Model,
+    file: File,
+    building: Building,
+    events: Events
+  ) => {
     const appInstance = getApp();
     const storageInstance = getStorage(appInstance);
-    
     const fileRef = ref(storageInstance, model.id);
     await uploadBytes(fileRef, file);
-
-    events.trigger({type: "UPDATE_BUILDING", payload: building});
+    await buildingHandler.refreshModels(building, events);
+    events.trigger({ type: "UPDATE_BUILDING", payload: building });
   },
 
   deleteModel:async (model: Model, building: Building,  events: Events) => {
@@ -57,6 +70,8 @@ export const databaseHandler = {
     const storageInstance = getStorage(appInstance);
     const fileRef = ref(storageInstance, model.id);
     await deleteObject(fileRef);
+    await buildingHandler.deleteModels([model.id]);
+    await buildingHandler.refreshModels(building, events);
     events.trigger({type: "UPDATE_BUILDING", payload: building});
   }
 };
