@@ -8,6 +8,7 @@ export function getBottomBarTools(
   state: State,
   dispatch: React.Dispatch<Action>
 ): Tool[] {
+
   const tools = [
     {
       name: "Clipping planes",
@@ -29,6 +30,7 @@ export function getBottomBarTools(
       ),
       active: false,
       action: (dispatch: any) => {
+        console.log("Click!");
         const tool = findTool("Clipping planes");
         deactivateAllTools(dispatch, "Clipping planes");
         tool.active = !tool.active;
@@ -40,9 +42,9 @@ export function getBottomBarTools(
       icon: <RulerIcon />,
       active: false,
       action: (dispatch: any) => {
+        console.log("Click!");
         const tool = findTool("Dimensions");
         deactivateAllTools(dispatch, "Dimensions");
-        console.log("Dimensions!");
         tool.active = !tool.active;
         dispatch({ type: "TOGGLE_DIMENSIONS", payload: tool.active });
       },
@@ -67,9 +69,11 @@ export function getBottomBarTools(
       ),
       active: false,
       action: (dispatch: any) => {
+        console.log("Click!");
         const tool = findTool("Explosion");
         deactivateAllTools(dispatch, "Explosion");
         tool.active = !tool.active;
+        console.log(tool.active);
         dispatch({ type: "EXPLODE_MODEL", payload: tool.active });
       },
     },

@@ -9,7 +9,6 @@ export const BuildingMenu: FC<{
   onToggleMenu: (active: boolean, mode?: FrontMenuMode) => void;
 }> = ({ mode, open, onToggleMenu }) => {
   if (!open) {
-    console.log("Empty div - not open");
     return <></>;
   }
 

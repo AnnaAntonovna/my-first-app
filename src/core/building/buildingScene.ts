@@ -48,6 +48,7 @@ export class BuildingScene {
 
     const clipper = new OBC.EdgesClipper(this.components, OBC.EdgesPlane);
     this.components.tools.add(clipper);
+    
     const thinLineMaterial = new LineMaterial({
       color: 0x000000,
       linewidth: 0.001,
@@ -96,7 +97,14 @@ export class BuildingScene {
     (this.fragments as any) = null;
   }
 
-  explode(active: boolean) {}
+  explode(active: boolean) {
+    const exploder = this.fragments.exploder;
+    if (active) {
+      exploder.explode();
+    } else {
+      exploder.reset();
+    }
+  }
 
   async convertIfcToFragments(ifc: File) {
     let fragments = new OBC.Fragments(this.components);
