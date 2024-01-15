@@ -18,8 +18,8 @@ export const BuildingTopbar: FC<{
   return (
     <>
       <AnimatePresence>
-        <div className="p-5 text-white bg-primary-100 flex justify-between items-center w-100">
-          <div className="flex">
+        <div className="p-5 z-30 text-white bg-primary-100 flex justify-between items-center w-screen">
+          <div className="flex z-30">
             {!leftSideOpen && (
               <button
                 onClick={onOpen}
@@ -115,7 +115,7 @@ export const BuildingTopbar: FC<{
               bg-white text-primary border-2 border-white
               transition duration-150 ease-in-out
               hover:bg-primary hover:border-primary hover:text-white-100
-              rotate-180"
+              rotate-180 xxs:hidden xs:block"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -140,7 +140,7 @@ export const BuildingTopbar: FC<{
               text-xs text-primary border-white text-primary border-2
               transition duration-150 ease-in-out
               hover:bg-primary hover:border-primary hover:text-white-100
-              focus:bg-white focus:text-primary"
+              focus:bg-white focus:text-primary xxs:hidden xs:block"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

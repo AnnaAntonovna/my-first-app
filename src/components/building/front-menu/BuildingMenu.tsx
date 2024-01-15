@@ -2,6 +2,8 @@ import { FC } from "react";
 import { BuildingInfoMenu } from "./BuildingMenuContent";
 import { FrontMenuMode } from '../types';
 import { ModelListMenu } from "./ModelListMenu";
+import { FloorplanMenu } from "./FloorplanMenu";
+import { PropertiesMenu } from "./PropertiesMenu";
 
 export const BuildingMenu: FC<{
   mode: FrontMenuMode;
@@ -18,10 +20,14 @@ export const BuildingMenu: FC<{
 
   content.set("BuildingInfo", <BuildingInfoMenu onToggleMenu={onToggleMenu} />);
   content.set("ModelList", <ModelListMenu />);
+  content.set("Properties", <PropertiesMenu />);
+  content.set("Floorplans", <FloorplanMenu />);
 
   const titles = {
     BuildingInfo: "Building Information",
     ModelList: "Model List",
+    Properties: "Properties",
+    Floorplans: "Floorplans",
   };
 
   const title = titles[mode];

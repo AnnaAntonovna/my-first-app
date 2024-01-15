@@ -101,3 +101,12 @@
   .text-transition {
     transition: opacity 1s ease-in-out, color 1s ease-in-out;
   }
+
+
+  .transparent{
+    background-color: rgba(255, 255, 255, 0.44);
+  }
+
+  .transparent-mobile{
+    background-color: rgba(255, 255, 255, 0.85);
+  }

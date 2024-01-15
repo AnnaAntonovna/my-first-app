@@ -52,11 +52,11 @@ export const Login: FC = () => {
     <div className="flex justify-start h-screen w-screen">
       
       <AnimatePresence>
-        <div className="mscreen:w-1/3 pl-5 pr-5">
+        <div className="w-min-420 mscreen:w-1/3 pl-5 pr-5">
           {!state.user && (
             <motion.section {...slideAnimation("left")}>
               <div className="h-screen flex flex-col items-center justify-center">
-                <img src={logo} className="mb-5 h-1/4 w-1/3 min-w-fit mt-5" />
+                <img src={logo} className="mb-5 min-h-1/4 min-w-1/3 mt-5 mr-10 ml-10" />
                 <form onSubmit={onMailLogin}>
                   {error && <p className="mb-6 field error pb-2.5 rounded pt-3 text-sm">{error}</p>}
                   <p 
@@ -153,7 +153,7 @@ export const Login: FC = () => {
       )}
       <motion.div
             animate= {{opacity: 0}}
-            transition={{ delay: 0.6 }}
+            transition={{ delay: 1.5 }}
             className="bg-white-100 absolute w-screen h-screen flex justify-center items-center pointer-events-none"
           >
             Loading...

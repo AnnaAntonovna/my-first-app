@@ -6,6 +6,8 @@ import { Building, Floorplan, Property } from "../../types";
 import { downloadZip } from "client-zip";
 import { unzip } from "unzipit";
 import { LineMaterial } from "three/examples/jsm/lines/LineMaterial";
+import { createContext } from "react";
+
 
 export class BuildingScene {
   database = new BuildingDatabase();
@@ -16,6 +18,28 @@ export class BuildingScene {
   private loadedModels = new Set<string>();
   private whiteMaterial = new THREE.MeshBasicMaterial({ color: "white" });
   private properties: { [fragID: string]: any } = {};
+
+  private activeTool: string | null = null;
+
+  setActiveTool(toolName: string | null) {
+    this.activeTool = toolName;
+    this.updateToolStates();
+  }
+
+  private updateToolStates() {
+    const dimensions = this.getDimensions();
+    const highlighter = this.fragments.highlighter;
+
+    if (this.activeTool === "Dimensions") {
+      dimensions.enabled = true;
+      console.log("dimensions enabled")
+      highlighter.active = false; // Disable preselect/select
+    } else {
+      dimensions.enabled = false;
+      console.log("dimensions disabled")
+      highlighter.active = true; // Enable preselect/select
+    }
+  }
 
   get container() {
     const domElement = this.components.renderer.get().domElement;
@@ -48,7 +72,7 @@ export class BuildingScene {
 
     const clipper = new OBC.EdgesClipper(this.components, OBC.EdgesPlane);
     this.components.tools.add(clipper);
-    
+
     const thinLineMaterial = new LineMaterial({
       color: 0x000000,
       linewidth: 0.001,
@@ -92,6 +116,8 @@ export class BuildingScene {
 
   dispose() {
     this.toggleEvents(false);
+    this.properties = {};
+    this.loadedModels.clear();
     this.components.dispose();
     (this.components as any) = null;
     (this.fragments as any) = null;
@@ -133,6 +159,8 @@ export class BuildingScene {
 
   toggleFloorplan(active: boolean, floorplan?: Floorplan) {
     const floorNav = this.getFloorNav();
+    console.log("Amount of floors");
+    console.log(this.floorplans.length);
     if (!this.floorplans.length) return;
     if (active && floorplan) {
       this.toggleGrid(false);
@@ -169,6 +197,7 @@ export class BuildingScene {
       { name: "wheel", action: this.updateCulling },
       { name: "keydown", action: this.createClippingPlane },
       { name: "keydown", action: this.createDimension },
+      { name: "click", action: this.createDimension },
       { name: "keydown", action: this.deleteClippingPlaneOrDimension },
     ];
     this.toggleEvents(true);
@@ -194,7 +223,8 @@ export class BuildingScene {
   };
 
   private createDimension = (event: KeyboardEvent) => {
-    if (event.code === "KeyD") {
+    if (event.code === "KeyD" || event.code === "Click") {
+      this.fragments.highlighter.active = false;
       const dims = this.getDimensions();
       if (dims) {
         dims.create();
@@ -223,11 +253,17 @@ export class BuildingScene {
   }
 
   private deleteClippingPlaneOrDimension = (event: KeyboardEvent) => {
-    if (event.code === "Delete") {
+    if (event.code === "Delete" || event.keyCode == 27 || event.code === "Cancel" || event.code === "Backspace") {
+      try{
       const dims = this.getDimensions();
       dims.delete();
+      }
+      catch (error) {console.log(error)}
+      try{
       const clipper = this.getClipper();
       clipper.delete();
+      }
+      catch (error) {console.log(error)}
     }
   };
 
@@ -236,37 +272,41 @@ export class BuildingScene {
   };
 
   private preselect = () => {
-    this.fragments.highlighter.highlight("preselection");
+    if (this.activeTool !== "Dimensions") {
+      this.fragments.highlighter.highlight("preselection");
+    }
   };
 
   private select = () => {
-    const result = this.fragments.highlighter.highlight("selection");
-    if (result) {
-      const allProps = this.properties[result.fragment.id];
-      const props = allProps[result.id];
-      if (props) {
-        const formatted: Property[] = [];
-        for (const name in props) {
-          let value = props[name];
-          if (!value) value = "Unknown";
-          if (value.value) value = value.value;
-          if (typeof value === "number") value = value.toString();
-          formatted.push({ name, value });
-        }
-        try {
-          return this.events.trigger({
-            type: "UPDATE_PROPERTIES",
-            payload: formatted,
-          });
-        } catch (error) {
-          console.log(error);
+    if (this.activeTool !== "Dimensions") {
+      const result = this.fragments.highlighter.highlight("selection");
+      if (result) {
+        const allProps = this.properties[result.fragment.id];
+        const props = allProps[result.id];
+        if (props) {
+          const formatted: Property[] = [];
+          for (const name in props) {
+            let value = props[name];
+            if (!value) value = "Unknown";
+            if (value.value) value = value.value;
+            if (typeof value === "number") value = value.toString();
+            formatted.push({ name, value });
+          }
+          try {
+            return this.events.trigger({
+              type: "UPDATE_PROPERTIES",
+              payload: formatted,
+            });
+          } catch (error) {
+            console.log(error);
+          }
         }
       }
-    }
-    try {
-      this.events.trigger({ type: "UPDATE_PROPERTIES", payload: [] });
-    } catch (error) {
-      console.log(error);
+      try {
+        this.events.trigger({ type: "UPDATE_PROPERTIES", payload: [] });
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -308,7 +348,14 @@ export class BuildingScene {
     return downloadZip(files).blob();
   }
 
-  private toggleEdges(visible: boolean) {}
+  private toggleEdges(visible: boolean) {
+    const edges = Object.values(this.fragments.edges.edgesList);
+    const scene = this.components.scene.get();
+    for (const edge of edges) {
+      if (visible) scene.add(edge);
+      else edge.removeFromParent();
+    }
+  }
 
   private async loadAllModels(building: Building) {
     const buildingsURLs = await this.database.getModels(building);
@@ -344,36 +391,37 @@ export class BuildingScene {
           type: "UPDATE_FLOORPLANS",
           payload: this.floorplans,
         });
-      if (this.floorplans.length === 0) {
-        for (const levelProps of levelsProperties) {
-          const elevation = levelProps.SceneHeight + levelOffset;
+        if (this.floorplans.length === 0) {
+          for (const levelProps of levelsProperties) {
+            const elevation = levelProps.SceneHeight + levelOffset;
 
-          this.floorplans.push({
-            id: levelProps.expressID,
-            name: levelProps.Name.value,
-          });
+            this.floorplans.push({
+              id: levelProps.expressID,
+              name: levelProps.Name.value,
+            });
 
-          // Create floorplan
-          await floorNav.create({
-            id: levelProps.expressID,
-            ortho: true,
-            normal: new THREE.Vector3(0, -1, 0),
-            point: new THREE.Vector3(0, elevation, 0),
-          });
+            // Create floorplan
+            await floorNav.create({
+              id: levelProps.expressID,
+              ortho: true,
+              normal: new THREE.Vector3(0, -1, 0),
+              point: new THREE.Vector3(0, elevation, 0),
+            });
+          }
+
+          try {
+            this.events.trigger({
+              type: "UPDATE_FLOORPLANS",
+              payload: this.floorplans,
+            });
+          } catch (error) {
+            console.log(error);
+          }
         }
-
-        try {
-          this.events.trigger({
-            type: "UPDATE_FLOORPLANS",
-            payload: this.floorplans,
-          });
-        } catch (error) {
-          console.log(error);
-        }
+      } catch (error) {
+        console.log("Update floorplans error:")
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
-    }
 
       // Load all the fragments within this zip file
 
@@ -445,3 +493,4 @@ export class BuildingScene {
     }
   }
 }
+

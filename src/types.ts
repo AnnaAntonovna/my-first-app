@@ -34,6 +34,13 @@ export interface Tool {
     action: (...args: any) => void;
 }
 
+export interface ToolXS {
+    name: string;
+    icon: any;
+    active?: boolean,
+    action?: (...args: any) => void;
+}
+
 export interface Model {
     name: string;
     id: string;

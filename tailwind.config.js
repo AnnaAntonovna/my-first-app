@@ -75,9 +75,11 @@ module.exports = {
         340: "340px",
         350: "350px",
         360: "360px",
+        510: "510px",
         656: "656px",
         880: "880px",
         508: "508px",
+        "100vw": "100vw",
       },
       height: {
         80: "80px",
@@ -142,6 +144,7 @@ module.exports = {
       },
 
       screens: {
+        xxs: "200px",
         xs: "450px",
         mscreen: "750px",
       },

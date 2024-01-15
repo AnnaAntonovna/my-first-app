@@ -62,26 +62,28 @@ export const BuildingViewer: FC = () => {
 
   return (
     <>
-      <div className="md:flex h-screen flex-col overflow-hidden relative">
+      <div className="flex h-screen flex-col overflow-hidden relative">
         <div className="w-screen h-screen fixed top-0 left-0 right-0">
           <BuildingViewport />
         </div>
         <AnimatePresence>
           <motion.section className="z-20" {...slideAnimation("up")}>
+            <div className="z-30">
             <BuildingTopbar
               sideOpen={sideOpen}
               onOpen={() => onSideOpen()}
               rightOpen={rightOpen}
               onRightOpen={onRightOpen}
             />
+            </div>
           </motion.section>
           <div className="flex flex-grow">
             {sideOpen && (
               <motion.section
                 {...slideAnimation("left")}
-                className="flex flex-col z-20 min-w-210 xscreen:w-full mscreen:w-360"
+                className="bg-white transparent pt-5 border-r-4 border-none mscreen:border-solid  border-primary-100 flex flex-col z-20 w-360 mscreen:w-360 xs:w-full xxs:w-full"
               >
-                <div className="flex-grow flex flex-col p-5 border-r-4 border-primary-100 min-w-210 xscreen:w-full mscreen:w-360">
+                <div className="flex flex-col mscreen:w-360 xs:w-full xxs:w-full">
                   <BuildingSidebar open={true} onToggleMenu={toggleFrontMenu} />
                 </div>
               </motion.section>
@@ -150,7 +152,7 @@ export const BuildingViewer: FC = () => {
               </motion.section>
             )}
           </div>
-          <div className="z-30">
+          <div className="z-10">
             <BuildingBottomMenu />
             </div>
 
