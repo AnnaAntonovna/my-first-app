@@ -208,12 +208,12 @@ export class BuildingScene {
     console.log(this.floorplans.length);
     if (!this.floorplans.length) return;
     if (active && floorplan) {
-      this.toggleGrid(false);
+      //this.toggleGrid(false);
       this.toggleEdges(true);
       floorNav.goTo(floorplan.id);
       this.fragments.materials.apply(this.whiteMaterial);
     } else {
-      this.toggleGrid(true);
+      //this.toggleGrid();
       this.toggleEdges(false);
       this.fragments.materials.reset();
       floorNav.exitPlanView();

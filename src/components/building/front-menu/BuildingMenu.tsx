@@ -33,7 +33,7 @@ export const BuildingMenu: FC<{
   const title = titles[mode];
 
   return (
-    <div className="bg-white border-r-4 border-b-4 border-solid border-primary-100 text-primary p-2 z-100 min-w-210 xscreen:w-full mscreen:w-360">
+    <div className=" bg-white border-r-4 border-b-4 border-solid border-primary-100 text-primary p-2 z-100 min-w-210 mscreen:w-360 xs:w-full xxs:w-full z-20">
       <div
       className="flex items-center justify-between pt-6 pb-6 "
       >
