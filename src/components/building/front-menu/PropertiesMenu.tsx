@@ -16,8 +16,7 @@ export const PropertiesMenu: FC = () => {
       {state.properties.map((property) => (
         <div key={property.name}>
           <div className="text-xs">
-            <div>{property.name}</div>
-            <p>:</p>
+            <div className="flex bg-primary-100">{property.name} <p>:</p></div>
             <div>{property.value}</div>
           </div>
           <Divider />
