@@ -50,7 +50,13 @@ export class BuildingScene {
   private events: Events;
 
   constructor(container: HTMLDivElement, building: Building, events: Events) {
-    this.events = events;
+    if (!events) {
+      console.error("Events object is undefined in BuildingScene constructor.");
+      // Initialize events here or provide alternative logic
+      this.events = new Events();
+    } else {
+      this.events = events;
+    }
     this.components = new OBC.Components();
 
     this.components.scene = new OBC.SimpleScene(this.components);
@@ -106,6 +112,11 @@ export class BuildingScene {
 
     this.fragments.highlighter.add("selection", [selectMat]);
     this.fragments.highlighter.add("preselection", [preselectMat]);
+
+    this.floorplans = [];
+
+    console.log("Floorplans amount");
+    console.log(this.floorplans.length);
 
     this.loadAllModels(building);
 
@@ -224,7 +235,7 @@ export class BuildingScene {
 
   private createDimension = (event: KeyboardEvent) => {
     if (event.code === "KeyD" || event.code === "Click") {
-      this.fragments.highlighter.active = false;
+      //this.fragments.highlighter.active = false;
       const dims = this.getDimensions();
       if (dims) {
         dims.create();
@@ -360,6 +371,8 @@ export class BuildingScene {
   private async loadAllModels(building: Building) {
     const buildingsURLs = await this.database.getModels(building);
 
+    this.floorplans = [];
+
     for (const model of buildingsURLs) {
       const { url, id } = model;
 
@@ -385,15 +398,13 @@ export class BuildingScene {
 
       const levelOffset = 1.5;
       const floorNav = this.getFloorNav();
+      console.log("Floors: (load models)")
+      console.log(this.floorplans);
 
-      try {
-        this.events.trigger({
-          type: "UPDATE_FLOORPLANS",
-          payload: this.floorplans,
-        });
         if (this.floorplans.length === 0) {
           for (const levelProps of levelsProperties) {
             const elevation = levelProps.SceneHeight + levelOffset;
+            console.log("Floor created")
 
             this.floorplans.push({
               id: levelProps.expressID,
@@ -408,20 +419,18 @@ export class BuildingScene {
               point: new THREE.Vector3(0, elevation, 0),
             });
           }
-
-          try {
+ 
             this.events.trigger({
               type: "UPDATE_FLOORPLANS",
-              payload: this.floorplans,
+              payload: this.floorplans,              
             });
-          } catch (error) {
-            console.log(error);
-          }
+            console.log("AMOUNT we set in the payload (to the state) load all models", this.floorplans.length);
+            
         }
-      } catch (error) {
-        console.log("Update floorplans error:")
-        console.log(error);
-      }
+        console.log("AMOUNT we set in the payload (to the state) load all models after update", this.floorplans.length);
+
+
+      console.log(this.floorplans.length);
 
       // Load all the fragments within this zip file
 
@@ -484,6 +493,7 @@ export class BuildingScene {
           }
           groups["floor"][floor].push(id);
         }
+        //console.log(floorNames)
 
         this.fragments.groups.add(fragment.id, groups);
       }

@@ -6,6 +6,7 @@ export const buildingHandler = {
     viewer: null as BuildingScene | null,
 
     start(container: HTMLDivElement, building: Building, events: Events) {
+      console.log("Events in buildingHandler.start:", events);
         if (!this.viewer) {
             this.viewer = new BuildingScene(container, building, events);
         }
@@ -20,6 +21,7 @@ export const buildingHandler = {
     },
 
     async refreshModels(building: Building, events: Events) {
+      console.log("Events in buildingHandler.refreshModels:", events);
         if (this.viewer) {
           const container = this.viewer.container;
           this.viewer.dispose();

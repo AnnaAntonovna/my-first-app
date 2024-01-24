@@ -15,7 +15,7 @@ export const PropertiesMenu: FC = () => {
 
       {state.properties.map((property) => (
         <div key={property.name}>
-          <div className="value-pair list-item">
+          <div className="text-xs">
             <div>{property.name}</div>
             <p>:</p>
             <div>{property.value}</div>

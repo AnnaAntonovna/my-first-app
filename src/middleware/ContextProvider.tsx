@@ -6,45 +6,36 @@ import { executeCore } from "./CoreHandler";
 import { Authenticator } from "./Authenticator";
 import { Events } from "./Events";
 
-const appContext = createContext<[State, Dispatch<Action>]>([
+const appContext = createContext<[State, React.Dispatch<Action>]>([
     initialState,
     () => {},
-]);
-
-export const ContextProvider: FC<PropsWithChildren> = ({children}) => {
+  ]);
+  
+  export const ContextProvider: FC<PropsWithChildren> = ({ children }) => {
     const [state, setState] = useReducer(reducer, initialState);
-
+  
     const events = new Events();
-
-    /* for(const type of ActionList){
-        events.on(type, (payload: any) => {
-            setState({type, payload});
-        });
-    }; */
-
-    const dispatch = (
-        value: Action, 
-    ) => {
-        setState(value);
-        executeCore(value, events);
+  
+    const dispatch = (value: Action) => {
+      setState(value);
+      executeCore(value, events);
     };
-
+  
     for (const type of ActionList) {
-        events.on(type, (payload: any) => {
-          const action = { type, payload };
-          dispatch(action);
-        });
-      }
-
-    
+      events.on(type, (payload: any) => {
+        const action = { type, payload };
+        dispatch(action);
+      });
+    }
+  
     return (
-    <appContext.Provider value={[state, dispatch]}>
+      <appContext.Provider value={[state, dispatch]}>
         <Authenticator />
         {children}
-    </appContext.Provider>)
-};
-
-
-export const useAppContext = () => {
+      </appContext.Provider>
+    );
+  };
+  
+  export const useAppContext = () => {
     return useContext(appContext);
-}
+  };

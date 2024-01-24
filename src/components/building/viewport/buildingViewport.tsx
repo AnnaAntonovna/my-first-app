@@ -9,7 +9,7 @@ export const BuildingViewport: FC = () => {
     const container = containerRef.current;
     if (container && user) {
       dispatch({ type: "START_BUILDING", payload: { container, building } });
-      console.log("It should work");
+      //console.log("It should work");
     } else {
       console.log("Smth went wrong");
     }

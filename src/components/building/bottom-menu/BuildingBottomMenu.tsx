@@ -27,7 +27,7 @@ export const BuildingBottomMenu: FC = () => {
       // Call the tool's action function
       switch (toolName) {
         case "Clipping planes":
-          //dispatch({ type: "TOGGLE_CLIPPER", payload: isActive });
+          dispatch({ type: "TOGGLE_CLIPPER", payload: isActive });
           break;
         case "Dimensions":
           dispatch({ type: "TOGGLE_DIMENSIONS", payload: isActive });

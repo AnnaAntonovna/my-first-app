@@ -10,6 +10,7 @@ import { BuildingMenu } from "./front-menu/BuildingMenu";
 import { FrontMenuMode } from "./types";
 import { BuildingViewport } from "./viewport/buildingViewport";
 import { BuildingBottomMenu } from "./bottom-menu/BuildingBottomMenu";
+import { Events } from "../../middleware/Events";
 
 export const BuildingViewer: FC = () => {
   const [sideOpen, setSideOpen] = useState(false);
@@ -20,6 +21,10 @@ export const BuildingViewer: FC = () => {
   const [frontOpen, setFrontOpen] = useState(false);
   const [frontMenu, setFrontMenu] = useState<FrontMenuMode>("BuildingInfo");
 
+  const events = new Events();
+  console.log('Events in BuildingViewer:', events); // Check if events is defined
+
+
   const [state, dispatch] = useAppContext();
   const { user, building } = state;
   const onSideOpen = () => {
@@ -28,6 +33,8 @@ export const BuildingViewer: FC = () => {
     setLeftActivated(true);
     console.log("OnOpen");
   };
+
+  //alert(state.floorplans.length);
 
   const onRightOpen = () => {
     const active = !rightOpen;

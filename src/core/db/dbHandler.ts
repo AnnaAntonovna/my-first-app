@@ -73,5 +73,5 @@ export const databaseHandler = {
     await buildingHandler.deleteModels([model.id]);
     await buildingHandler.refreshModels(building, events);
     events.trigger({type: "UPDATE_BUILDING", payload: building});
-  }
+  },
 };

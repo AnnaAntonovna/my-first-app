@@ -12,7 +12,6 @@ import { UserProvider } from "./UserProvider";
 function App() {
   return (
     <ContextProvider>
-      <UserProvider>
       <Router>
         <Routes>
             <Route path="/building" element={<BuildingViewer />} />
@@ -23,7 +22,6 @@ function App() {
             <Route path="/" element={<LoginForm />} />
         </Routes>
       </Router>
-      </UserProvider>
     </ContextProvider>
   );
 }
