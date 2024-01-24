@@ -117,7 +117,7 @@ export const BuildingViewer: FC = () => {
               </motion.section>
             )}
 
-            <div className="z-20 h-auto">
+            <div className="z-20 h-80">
               <BuildingMenu
                 onToggleMenu={toggleFrontMenu}
                 open={frontOpen}

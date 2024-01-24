@@ -66,5 +66,17 @@ export const buildingHandler = {
           this.viewer.toggleFloorplan(active, floorplan);
         }
       },
+
+      toggleGrid(active: boolean) {
+        if (this.viewer) {
+          this.viewer.toggleGrid(active);
+        }
+      },
+
+      toggleVisibility(active: boolean) {
+        if (this.viewer) {
+          this.viewer.toggleVisibility(active);
+        }
+      },
 };
 

@@ -20,6 +20,9 @@ export const ActionList =
   "TOGGLE_CLIPPER",
   "TOGGLE_DIMENSIONS",
   "TOGGLE_FLOORPLAN",
+  "TOGGLE_AREA",
+  "TOGGLE_GRID",
+  "TOGGLE_VISIBILITY"
 ] as const;
 
 type ActionListType = typeof ActionList;

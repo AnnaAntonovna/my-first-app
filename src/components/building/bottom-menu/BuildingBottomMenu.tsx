@@ -32,19 +32,35 @@ export const BuildingBottomMenu: FC = () => {
         case "Dimensions":
           dispatch({ type: "TOGGLE_DIMENSIONS", payload: isActive });
           break;
+
         case "Explosion":
           dispatch({ type: "EXPLODE_MODEL", payload: isActive });
           break;
 
-        case "Floorplan":
-          dispatch({ type: "TOGGLE_FLOORPLAN", payload: isActive });
+          case "Grid":
+          dispatch({ type: "TOGGLE_GRID", payload: isActive });
           break;
+
+          case "Visibility":
+          dispatch({ type: "TOGGLE_VISIBILITY", payload: isActive });
+          break;
+
+        case "Area":
+          dispatch({ type: "TOGGLE_AREA", payload: isActive });
+          break;
+
         default:
           console.log("No action defined for this tool");
       }
 
       return { ...prevActiveTools, [toolName]: isActive };
     });
+  };
+
+  const findTool = (name: string) => {
+    const tool = tools.find((tool) => tool.name === name);
+    if (!tool) throw new Error("Tool not found!");
+    return tool;
   };
 
   return (

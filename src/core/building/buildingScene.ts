@@ -8,7 +8,6 @@ import { unzip } from "unzipit";
 import { LineMaterial } from "three/examples/jsm/lines/LineMaterial";
 import { createContext } from "react";
 
-
 export class BuildingScene {
   database = new BuildingDatabase();
 
@@ -19,27 +18,6 @@ export class BuildingScene {
   private whiteMaterial = new THREE.MeshBasicMaterial({ color: "white" });
   private properties: { [fragID: string]: any } = {};
 
-  private activeTool: string | null = null;
-
-  setActiveTool(toolName: string | null) {
-    this.activeTool = toolName;
-    this.updateToolStates();
-  }
-
-  private updateToolStates() {
-    const dimensions = this.getDimensions();
-    const highlighter = this.fragments.highlighter;
-
-    if (this.activeTool === "Dimensions") {
-      dimensions.enabled = true;
-      console.log("dimensions enabled")
-      highlighter.active = false; // Disable preselect/select
-    } else {
-      dimensions.enabled = false;
-      console.log("dimensions disabled")
-      highlighter.active = true; // Enable preselect/select
-    }
-  }
 
   get container() {
     const domElement = this.components.renderer.get().domElement;
@@ -50,23 +28,27 @@ export class BuildingScene {
   private events: Events;
 
   constructor(container: HTMLDivElement, building: Building, events: Events) {
-    if (!events) {
-      console.error("Events object is undefined in BuildingScene constructor.");
-      // Initialize events here or provide alternative logic
-      this.events = new Events();
-    } else {
-      this.events = events;
-    }
+    this.events = events;
     this.components = new OBC.Components();
 
-    this.components.scene = new OBC.SimpleScene(this.components);
+    const sceneComponent = new OBC.SimpleScene(this.components);
+    const scene = sceneComponent.get();
+    scene.background = null;
+
+    const directionalLight = new THREE.DirectionalLight();
+    directionalLight.position.set(5, 10, 3);
+    directionalLight.intensity = 0.5;
+    scene.add(directionalLight);
+
+    const ambientLight = new THREE.AmbientLight();
+    ambientLight.intensity = 0.5;
+    scene.add(ambientLight);
+
+    this.components.scene = sceneComponent;
     this.components.renderer = new OBC.SimpleRenderer(
       this.components,
       container
     );
-
-    const scene = this.components.scene.get();
-    scene.background = new THREE.Color();
 
     const camera = new OBC.OrthoPerspectiveCamera(this.components);
     this.components.camera = camera;
@@ -88,19 +70,15 @@ export class BuildingScene {
     const floorNav = new OBC.PlanNavigator(clipper, camera);
     this.components.tools.add(floorNav);
 
-    const directionalLight = new THREE.DirectionalLight();
-    directionalLight.position.set(5, 10, 3);
-    directionalLight.intensity = 0.5;
-    scene.add(directionalLight);
-
-    const ambientLight = new THREE.AmbientLight();
-    ambientLight.intensity = 0.5;
-    scene.add(ambientLight);
-
     const grid = new OBC.SimpleGrid(this.components);
     this.components.tools.add(grid);
+    const mesh = grid.get();
+    mesh.visible = false;
 
     this.fragments = new OBC.Fragments(this.components);
+    //disable culling system - not loading the whole model?
+    //this.fragments.culler.enabled = false;
+    this.components.tools.add(this.fragments);
 
     this.fragments.highlighter.active = true;
     const selectMat = new THREE.MeshBasicMaterial({ color: 0x003366 });
@@ -113,16 +91,23 @@ export class BuildingScene {
     this.fragments.highlighter.add("selection", [selectMat]);
     this.fragments.highlighter.add("preselection", [preselectMat]);
 
-    this.floorplans = [];
-
-    console.log("Floorplans amount");
-    console.log(this.floorplans.length);
+    /* container.ondblclick = () => {
+      clipper.create();
+      clipper.enabled = true;
+      console.log(clipper);
+    };
+    container.oncontextmenu = () => {
+      dimensions.create();
+      dimensions.enabled = true;
+      console.log(dimensions);
+      dimensions.enabled = false;
+    }; */
 
     this.loadAllModels(building);
 
-    this.setupEvents();
-
     this.fragments.exploder.groupName = "floor";
+
+    this.setupEvents();
   }
 
   dispose() {
@@ -130,6 +115,7 @@ export class BuildingScene {
     this.properties = {};
     this.loadedModels.clear();
     this.components.dispose();
+    this.whiteMaterial.dispose();
     (this.components as any) = null;
     (this.fragments as any) = null;
   }
@@ -142,6 +128,121 @@ export class BuildingScene {
       exploder.reset();
     }
   }
+
+  private toggleEvents(active: boolean) {
+    for (const event of this.sceneEvents) {
+      if (active) {
+        window.addEventListener(event.name, event.action);
+      } else {
+        window.removeEventListener(event.name, event.action);
+      }
+    }
+  }
+
+  toggleDimensions(active: boolean) {
+    const dimensions = this.getDimensions();
+    if (dimensions) {
+      dimensions.enabled = active;
+    }
+  }
+
+  private createDimension = (event: KeyboardEvent) => {
+    if (this.getDimensions().enabled) {
+      this.fragments.highlighter.active = false;
+      const dims = this.getDimensions();
+      if (dims && dims.enabled) {
+        this.container.onclick = () => {
+          dims.create();
+          console.log(dims);
+        };
+      }
+    } else {
+      this.fragments.highlighter.active = true;
+    }
+  };
+
+  toggleClippingPlanes(active: boolean) {
+    const clipper = this.getClipper();
+    if (clipper) {
+      clipper.enabled = active;
+    }
+  }
+
+/* //Deprecated???
+  toggleArea(active: boolean) {
+    const area =  OBC.AreaMeasurement(this.components);//OBC.AreaMeasurement(this.components);
+    if (area) {
+      area.enabled = active;
+    }
+  } */
+
+
+  private createClippingPlane = (event: KeyboardEvent) => {
+    if (this.getClipper().enabled) {
+      const clipper = this.getClipper();
+      if (clipper && clipper.enabled) {
+        this.container.ondblclick = () => {
+          clipper.create();
+          console.log(clipper);
+        };
+      }
+    } else {
+      this.fragments.highlighter.active = true;
+    }
+  };
+
+  toggleGrid(visible: boolean) {
+    const grid = this.components.tools.get("SimpleGrid") as OBC.SimpleGrid;
+    const mesh = grid.get();
+    mesh.visible = visible;
+  }
+
+  toggleVisibility(visible: boolean) {
+    const dims = this.getDimensions();
+    dims.visible = !visible;
+  }
+
+  toggleFloorplan(active: boolean, floorplan?: Floorplan) {
+    const floorNav = this.getFloorNav();
+    console.log("Amount of floors");
+    console.log(this.floorplans.length);
+    if (!this.floorplans.length) return;
+    if (active && floorplan) {
+      this.toggleGrid(false);
+      this.toggleEdges(true);
+      floorNav.goTo(floorplan.id);
+      this.fragments.materials.apply(this.whiteMaterial);
+    } else {
+      this.toggleGrid(true);
+      this.toggleEdges(false);
+      this.fragments.materials.reset();
+      floorNav.exitPlanView();
+    }
+  }
+
+  private getClipper() {
+    return this.components.tools.get("EdgesClipper") as OBC.EdgesClipper;
+  }
+
+  private getFloorNav() {
+    return this.components.tools.get("PlanNavigator") as OBC.PlanNavigator;
+  }
+
+  private getDimensions() {
+    return this.components.tools.get(
+      "SimpleDimensions"
+    ) as OBC.SimpleDimensions;
+  }
+
+  private deleteClippingPlaneOrDimension = (event: KeyboardEvent) => {
+    if (event.key === "Delete" || event.key === "Backspace") {
+      const dims = this.getDimensions();
+      dims.delete();
+      console.log(dims);
+      const clipper = this.getClipper();
+      clipper.delete();
+    }
+  };
 
   async convertIfcToFragments(ifc: File) {
     let fragments = new OBC.Fragments(this.components);
@@ -168,37 +269,40 @@ export class BuildingScene {
     return file as File;
   }
 
-  toggleFloorplan(active: boolean, floorplan?: Floorplan) {
-    const floorNav = this.getFloorNav();
-    console.log("Amount of floors");
-    console.log(this.floorplans.length);
-    if (!this.floorplans.length) return;
-    if (active && floorplan) {
-      this.toggleGrid(false);
-      this.toggleEdges(true);
-      floorNav.goTo(floorplan.id);
-      this.fragments.materials.apply(this.whiteMaterial);
-    } else {
-      this.toggleGrid(true);
-      this.toggleEdges(false);
-      this.fragments.materials.reset();
-      floorNav.exitPlanView();
-    }
-  }
+  private preselect = () => {
+    this.fragments.highlighter.highlight("preselection");
+  };
 
-  toggleClippingPlanes(active: boolean) {
-    const clipper = this.getClipper();
-    if (clipper) {
-      clipper.enabled = active;
+  private select = () => {
+    const result = this.fragments.highlighter.highlight("selection");
+    if (result) {
+      const allProps = this.properties[result.fragment.id];
+      const props = allProps[result.id];
+      if (props) {
+        const formatted: Property[] = [];
+        for (const name in props) {
+          let value = props[name];
+          if (!value) value = "Unknown";
+          if (value.value) value = value.value;
+          if (typeof value === "number") value = value.toString();
+          formatted.push({ name, value });
+        }
+        try {
+          return this.events.trigger({
+            type: "UPDATE_PROPERTIES",
+            payload: formatted,
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      }
     }
-  }
-
-  toggleDimensions(active: boolean) {
-    const dimensions = this.getDimensions();
-    if (dimensions) {
-      dimensions.enabled = active;
+    try {
+      this.events.trigger({ type: "UPDATE_PROPERTIES", payload: [] });
+    } catch (error) {
+      console.log(error);
     }
-  }
+  };
 
   private setupEvents() {
     this.sceneEvents = [
@@ -207,6 +311,7 @@ export class BuildingScene {
       { name: "mouseup", action: this.updateCulling },
       { name: "wheel", action: this.updateCulling },
       { name: "keydown", action: this.createClippingPlane },
+      { name: "dblclick", action: this.createClippingPlane },
       { name: "keydown", action: this.createDimension },
       { name: "click", action: this.createDimension },
       { name: "keydown", action: this.deleteClippingPlaneOrDimension },
@@ -214,111 +319,8 @@ export class BuildingScene {
     this.toggleEvents(true);
   }
 
-  private toggleEvents(active: boolean) {
-    for (const event of this.sceneEvents) {
-      if (active) {
-        window.addEventListener(event.name, event.action);
-      } else {
-        window.removeEventListener(event.name, event.action);
-      }
-    }
-  }
-
-  private createClippingPlane = (event: KeyboardEvent) => {
-    if (event.code === "KeyP") {
-      const clipper = this.getClipper();
-      if (clipper) {
-        clipper.create();
-      }
-    }
-  };
-
-  private createDimension = (event: KeyboardEvent) => {
-    if (event.code === "KeyD" || event.code === "Click") {
-      //this.fragments.highlighter.active = false;
-      const dims = this.getDimensions();
-      if (dims) {
-        dims.create();
-      }
-    }
-  };
-
-  private toggleGrid(visible: boolean) {
-    const grid = this.components.tools.get("SimpleGrid") as OBC.SimpleGrid;
-    const mesh = grid.get();
-    mesh.visible = visible;
-  }
-
-  private getClipper() {
-    return this.components.tools.get("EdgesClipper") as OBC.EdgesClipper;
-  }
-
-  private getFloorNav() {
-    return this.components.tools.get("PlanNavigator") as OBC.PlanNavigator;
-  }
-
-  private getDimensions() {
-    return this.components.tools.get(
-      "SimpleDimensions"
-    ) as OBC.SimpleDimensions;
-  }
-
-  private deleteClippingPlaneOrDimension = (event: KeyboardEvent) => {
-    if (event.code === "Delete" || event.keyCode == 27 || event.code === "Cancel" || event.code === "Backspace") {
-      try{
-      const dims = this.getDimensions();
-      dims.delete();
-      }
-      catch (error) {console.log(error)}
-      try{
-      const clipper = this.getClipper();
-      clipper.delete();
-      }
-      catch (error) {console.log(error)}
-    }
-  };
-
   private updateCulling = () => {
     this.fragments.culler.needsUpdate = true;
-  };
-
-  private preselect = () => {
-    if (this.activeTool !== "Dimensions") {
-      this.fragments.highlighter.highlight("preselection");
-    }
-  };
-
-  private select = () => {
-    if (this.activeTool !== "Dimensions") {
-      const result = this.fragments.highlighter.highlight("selection");
-      if (result) {
-        const allProps = this.properties[result.fragment.id];
-        const props = allProps[result.id];
-        if (props) {
-          const formatted: Property[] = [];
-          for (const name in props) {
-            let value = props[name];
-            if (!value) value = "Unknown";
-            if (value.value) value = value.value;
-            if (typeof value === "number") value = value.toString();
-            formatted.push({ name, value });
-          }
-          try {
-            return this.events.trigger({
-              type: "UPDATE_PROPERTIES",
-              payload: formatted,
-            });
-          } catch (error) {
-            console.log(error);
-          }
-        }
-      }
-      try {
-        this.events.trigger({ type: "UPDATE_PROPERTIES", payload: [] });
-      } catch (error) {
-        console.log(error);
-      }
-    }
   };
 
   private async serializeFragments(model: OBC.FragmentGroup) {
@@ -398,37 +400,41 @@ export class BuildingScene {
 
       const levelOffset = 1.5;
       const floorNav = this.getFloorNav();
-      console.log("Floors: (load models)")
+      console.log("Floors: (load models)");
       console.log(this.floorplans);
 
-        if (this.floorplans.length === 0) {
-          for (const levelProps of levelsProperties) {
-            const elevation = levelProps.SceneHeight + levelOffset;
-            console.log("Floor created")
+      if (this.floorplans.length === 0) {
+        for (const levelProps of levelsProperties) {
+          const elevation = levelProps.SceneHeight + levelOffset;
+          console.log("Floor created");
 
-            this.floorplans.push({
-              id: levelProps.expressID,
-              name: levelProps.Name.value,
-            });
+          this.floorplans.push({
+            id: levelProps.expressID,
+            name: levelProps.Name.value,
+          });
 
-            // Create floorplan
-            await floorNav.create({
-              id: levelProps.expressID,
-              ortho: true,
-              normal: new THREE.Vector3(0, -1, 0),
-              point: new THREE.Vector3(0, elevation, 0),
-            });
-          }
- 
-            this.events.trigger({
-              type: "UPDATE_FLOORPLANS",
-              payload: this.floorplans,              
-            });
-            console.log("AMOUNT we set in the payload (to the state) load all models", this.floorplans.length);
-            
+          // Create floorplan
+          await floorNav.create({
+            id: levelProps.expressID,
+            ortho: true,
+            normal: new THREE.Vector3(0, -1, 0),
+            point: new THREE.Vector3(0, elevation, 0),
+          });
         }
-        console.log("AMOUNT we set in the payload (to the state) load all models after update", this.floorplans.length);
 
+        this.events.trigger({
+          type: "UPDATE_FLOORPLANS",
+          payload: this.floorplans,
+        });
+        console.log(
+          "AMOUNT we set in the payload (to the state) load all models",
+          this.floorplans.length
+        );
+      }
+      console.log(
+        "AMOUNT we set in the payload (to the state) load all models after update",
+        this.floorplans.length
+      );
 
       console.log(this.floorplans.length);
 
@@ -503,4 +509,3 @@ export class BuildingScene {
     }
   }
 }
-

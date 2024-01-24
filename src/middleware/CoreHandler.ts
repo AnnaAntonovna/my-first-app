@@ -65,4 +65,10 @@ export const executeCore = async (action: Action, events?: Events) => {
     const { active, floorplan } = action.payload;
     return buildingHandler.toggleFloorplan(active, floorplan);
   }
+  if (action.type === "TOGGLE_GRID") {
+    return buildingHandler.toggleGrid(action.payload);
+  }
+  if (action.type === "TOGGLE_VISIBILITY") {
+    return buildingHandler.toggleVisibility(action.payload);
+  }
 };
