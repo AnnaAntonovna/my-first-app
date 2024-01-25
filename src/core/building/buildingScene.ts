@@ -7,6 +7,7 @@ import { downloadZip } from "client-zip";
 import { unzip } from "unzipit";
 import { LineMaterial } from "three/examples/jsm/lines/LineMaterial";
 import { createContext } from "react";
+import { useDoubleTap } from "use-double-tap";
 
 export class BuildingScene {
   database = new BuildingDatabase();

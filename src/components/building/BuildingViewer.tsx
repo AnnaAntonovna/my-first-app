@@ -85,10 +85,10 @@ export const BuildingViewer: FC = () => {
             </div>
           </motion.section>
           <div className="flex flex-grow">
-            {sideOpen && (
+            {sideOpen &&(
               <motion.section
                 {...slideAnimation("left")}
-                className="bg-white transparent pt-5 border-r-4 border-none mscreen:border-solid  border-primary-100 flex flex-col z-20 w-360 mscreen:w-360 xs:w-full xxs:w-full"
+                className={'bg-white transparent pt-5 border-r-4 border-none mscreen:border-solid  border-primary-100 flex flex-col z-20 w-360 mscreen:w-360 xs:w-full xxs:w-full ${frontOpen ? "hidden xxs:fixed xs:relative inset-0 border-solid border-primary-100 border-r-4" : "block"}'}
               >
                 <div className="flex flex-col mscreen:w-360 xs:w-full xxs:w-full">
                   <BuildingSidebar open={true} onToggleMenu={toggleFrontMenu} />
@@ -100,7 +100,7 @@ export const BuildingViewer: FC = () => {
               <motion.section
                 animate={{ x: -200, opacity: 0 }}
                 transition={{ delay: 0 }}
-                className="flex flex-col p-5 border-r-4 border-primary-100 min-w-210 xscreen:w-full mscreen:w-360"
+                className="flex flex-col p-5 border-r-4 border-primary-100 bord min-w-210 xscreen:w-full mscreen:w-360"
               >
                 <motion.section
                   className="z-20"
@@ -116,14 +116,34 @@ export const BuildingViewer: FC = () => {
                 </motion.section>
               </motion.section>
             )}
-
-            <div className="z-20 h-80">
+            {sideOpen && frontOpen && (
+            <motion.section
+            {...slideAnimation("left")}
+            className="z-20 w-360 mscreen:w-360 xs:w-full xxs:w-full h-80 xxs:h-screen xs:h-80"
+            >
+            <div className="z-30 h-80 xxs:h-screen xs:h-80 bg-white">
               <BuildingMenu
                 onToggleMenu={toggleFrontMenu}
                 open={frontOpen}
                 mode={frontMenu}
               />
             </div>
+            </motion.section>
+            )}
+            {!sideOpen && 
+            <motion.section
+            {...slideAnimation("down")}
+            className="h-80 z-20 xxs:w-full mscreen:w-360 xs:w-360 h-80 xxs:h-screen xs:h-80 xxs:hidden mscreen:block"
+          >
+            <div className="z-20 h-80 -translate-x-full mscreen:-translate-x-full xxs:hidden mscreen:block xxs:h-screen xs:h-80 ">
+              <BuildingMenu
+                onToggleMenu={toggleFrontMenu}
+                open={frontOpen}
+                mode={frontMenu}
+              />
+            </div>
+            </motion.section>
+            }
 
             {rightOpen && (
               <motion.section
@@ -143,7 +163,7 @@ export const BuildingViewer: FC = () => {
                 animate={{ x: 250, opacity: 0 }}
                 exit={{ opacity: 0 }}
                 transition={{ delay: 0 }}
-                className="flex-col ml-auto border-l-4 border-primary-100"
+                className="flex-col ml-auto"
               >
                 <motion.section
                   animate={{ opacity: 0, contentVisibility: "hidden" }}
