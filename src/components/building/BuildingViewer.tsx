@@ -88,7 +88,7 @@ export const BuildingViewer: FC = () => {
             {sideOpen &&(
               <motion.section
                 {...slideAnimation("left")}
-                className={'bg-white transparent pt-5 border-r-4 border-none mscreen:border-solid  border-primary-100 flex flex-col z-20 w-360 mscreen:w-360 xs:w-full xxs:w-full ${frontOpen ? "hidden xxs:fixed xs:relative inset-0 border-solid border-primary-100 border-r-4" : "block"}'}
+                className={'bg-white transparent pt-5 border-r-4 border-none mscreen:border-solid  border-primary-100 flex flex-col z-20 w-360 mscreen:w-360 xs:w-full xxs:w-full ${frontOpen ? "hidden xxs:fixed xs:relative xs:inset-0 xs:border-solid xs:border-primary-100 xs:border-r-4" : "block"}'}
               >
                 <div className="flex flex-col mscreen:w-360 xs:w-full xxs:w-full">
                   <BuildingSidebar open={true} onToggleMenu={toggleFrontMenu} />
