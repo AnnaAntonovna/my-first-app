@@ -1,4 +1,4 @@
-### 👋WEB IFC viewer (TypeScipt + React.js + openbim-components)
+## 👋WEB IFC viewer (TypeScipt + React.js + openbim-components)
 
 ### 📺 Video
 
