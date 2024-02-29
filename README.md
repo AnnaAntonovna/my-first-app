@@ -1,6 +1,4 @@
-# The website
-
-Here you can find it! [https://github.com/facebook/create-react-app](https://glittery-medovik-3e8bac.netlify.app/).
+### 👋WEB IFC viewer (TypeScipt + React.js + openbim-components)
 
 ## Video
 
@@ -18,4 +16,6 @@ https://github.com/AnnaAntonovna/my-first-app/assets/109595826/75e2e048-e6c7-4cb
 
 ![image](https://github.com/AnnaAntonovna/my-first-app/assets/109595826/54106d29-ce2c-4b0d-b297-ad5c281b9313)
 
+# The website
 
+Here you can find it! [https://github.com/facebook/create-react-app](https://glittery-medovik-3e8bac.netlify.app/).
