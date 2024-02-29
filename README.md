@@ -1,6 +1,6 @@
 ### 👋WEB IFC viewer (TypeScipt + React.js + openbim-components)
 
-## Video
+### 📺 Video
 
 https://github.com/AnnaAntonovna/my-first-app/assets/109595826/75e2e048-e6c7-4cb6-b19b-179c54eebd49
 
