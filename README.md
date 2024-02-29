@@ -2,10 +2,7 @@
 
 ## Video
 
-https://youtu.be/63Sm2AdSNVo
-
 https://github.com/AnnaAntonovna/my-first-app/assets/109595826/75e2e048-e6c7-4cb6-b19b-179c54eebd49
-
 
 
 ![image](https://github.com/AnnaAntonovna/my-first-app/assets/109595826/af63bf34-5cbd-484c-afaf-d1f901a41c30)
